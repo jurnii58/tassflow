@@ -2,17 +2,99 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Panel Administrador</title>
-
+    <title>Panel Administrador - Tassflow</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/ios.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* ===================================================
+           TASSFLOW - ADMIN PANEL (MAC GLASS DARK MODE)
+           =================================================== */
+        :root {
+            --glass-bg: rgba(20, 20, 20, 0.55);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --ios-blue: #0a84ff;
+            --ios-green: #30d158;
+            --ios-red: #ff453a;
+            --ios-orange: #ff9f0a;
+            --text-main: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.6);
+        }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+            background: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop') no-repeat center center fixed;
+            background-size: cover;
+            background-color: #121212;
+            color: var(--text-main);
+            padding-bottom: 50px;
+        }
+
+        .header {
+            background: rgba(15, 15, 15, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header h2 { margin: 0; font-size: 20px; font-weight: 600; }
+        .header-actions { display: flex; gap: 15px; align-items: center; }
+        .user-badge { background: rgba(255,255,255,0.1); padding: 6px 14px; border-radius: 20px; font-size: 13px; border: 1px solid var(--glass-border); }
+        .ios-btn.ghost { color: var(--ios-red); text-decoration: none; font-weight: 500; font-size: 14px; transition: opacity 0.2s;}
+        .ios-btn.ghost:hover { opacity: 0.8; }
+
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .stat { background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); padding: 25px; border-radius: 20px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.3); }
+        .stat h4 { margin: 0 0 10px 0; color: var(--text-muted); font-size: 13px; text-transform: uppercase; }
+        .stat p { margin: 0; font-size: 32px; font-weight: bold; }
+
+        .admin-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        .card { background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); padding: 25px; border-radius: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); display: flex; flex-direction: column; }
+        .card h3 { margin-top: 0; margin-bottom: 20px; font-size: 18px; border-bottom: 1px solid var(--glass-border); padding-bottom: 12px;}
+        .card h4 { font-size: 14px; color: var(--text-muted); margin-bottom: 15px; margin-top: 20px;}
+
+        input[type="text"], input[type="password"] { width: 100%; padding: 12px 15px; margin-bottom: 15px; border-radius: 12px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.3); color: var(--text-main); font-size: 14px; box-sizing: border-box; outline: none; }
+        input::placeholder { color: rgba(255,255,255,0.4); }
+        input:focus { border-color: rgba(255,255,255,0.5); }
+
+        .usuarios-checkbox { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+        .usuarios-checkbox label { background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 10px; font-size: 13px; border: 1px solid var(--glass-border); cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.2s; }
+        .usuarios-checkbox label:hover { background: rgba(255,255,255,0.1); }
+
+        .ios-btn { width: 100%; padding: 12px; border-radius: 12px; border: none; font-size: 14px; font-weight: 600; cursor: pointer; color: white; transition: opacity 0.2s, transform 0.1s; text-align: center; display: inline-block; box-sizing: border-box; text-decoration: none; margin-top: auto;}
+        .ios-btn.primary { background: var(--ios-blue); }
+        .ios-btn.secondary { background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); color: var(--text-main); }
+        .ios-btn.danger { background: rgba(255, 69, 58, 0.15); color: var(--ios-red); border: 1px solid rgba(255, 69, 58, 0.3); padding: 8px 15px; width: auto; font-size: 12px; margin-top: 0;}
+        .ios-btn.ghost-blue { background: transparent; color: var(--ios-blue); border: 1px solid var(--ios-blue); padding: 8px 15px; width: auto; font-size: 12px; margin-top: 0;}
+        .ios-btn:hover { opacity: 0.8; }
+        .ios-btn:active { transform: scale(0.97); }
+
+        .lista-usuarios, .lista-tareas { list-style: none; padding: 0; margin: 0; }
+        .lista-usuarios li, .tarea-chat-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--glass-border); }
+        .lista-usuarios li:last-child, .tarea-chat-item:last-child { border-bottom: none; }
+        .tarea-chat-item div { flex: 1; }
+        .tarea-chat-item strong { display: block; font-size: 15px; margin-bottom: 4px; }
+        .tarea-chat-item small { color: var(--text-muted); font-size: 12px; }
+
+        .grafica-card { position: relative; height: 320px; width: 100%; display: flex; flex-direction: column;}
+        .grafica-card canvas { width: 100% !important; flex: 1; max-height: 250px;}
+    </style>
 </head>
 <body>
 
 <header class="header">
-    <h2>Panel del Administrador</h2>
+    <h2><i class="fas fa-hammer" style="margin-right: 8px; color: var(--ios-blue);"></i>Panel del Administrador</h2>
     <div class="header-actions">
         <span class="user-badge">{{ session["usuario"] }}</span>
         <a href="{{ url_for('logout') }}" class="ios-btn ghost">Cerrar sesión</a>
@@ -21,7 +103,7 @@
 
 {% with messages = get_flashed_messages() %}
   {% if messages %}
-    <div style="background: #fee2e2; color: #991b1b; padding: 15px; text-align: center; max-width: 1200px; margin: 20px auto; border-radius: 12px; font-weight: bold;">
+    <div style="background: rgba(255, 69, 58, 0.2); border: 1px solid rgba(255, 69, 58, 0.4); color: #ff6961; padding: 15px; border-radius: 12px; text-align: center; font-weight: 600; max-width: 1160px; margin: 20px auto 0;">
       {% for message in messages %}
         <p style="margin: 0;">{{ message }}</p>
       {% endfor %}
@@ -35,16 +117,16 @@
         <p>{{ total_usuarios }}</p>
     </div>
     <div class="stat">
-        <h4>Tareas</h4>
+        <h4>Tareas Totales</h4>
         <p>{{ total_tareas }}</p>
     </div>
     <div class="stat">
         <h4>Pendientes</h4>
-        <p>{{ tareas_pendientes }}</p>
+        <p style="color: var(--ios-orange);">{{ tareas_pendientes }}</p>
     </div>
     <div class="stat">
         <h4>Completadas</h4>
-        <p>{{ tareas_completadas }}</p>
+        <p style="color: var(--ios-green);">{{ tareas_completadas }}</p>
     </div>
 </section>
 
@@ -54,17 +136,16 @@
 {% endfor %}
 
 {% if has_alerts %}
-<section style="max-width: 1200px; margin: 0 auto 20px;">
+<section style="max-width: 1200px; margin: 0 auto 25px; padding: 0 20px;">
     {% for u in usuarios %}
         {% if u.get('solicitud_reset') %}
-        <div class="card" style="border-left: 5px solid #ff3b30; background: white; padding: 20px; border-radius: 18px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 15px;">
-            <h3 style="margin-top: 0; color: #ff3b30;">⚠️ Recuperación Solicitada</h3>
+        <div class="card" style="border-left: 5px solid var(--ios-red); margin-bottom: 15px;">
+            <h3 style="color: var(--ios-red); border-bottom: none; margin-bottom: 10px;">⚠️ Recuperación Solicitada</h3>
             <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0;">
                 <span>El usuario <b>{{ u.nombre_usuario }}</b> olvidó su clave.</span>
-                
-                <form action="/resetear_password/{{ u._id }}" method="POST" style="display: flex; gap: 10px; margin: 0; align-items: center;">
-                    <input type="text" name="nueva_clave" placeholder="Nueva clave" required style="padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px;">
-                    <button type="submit" class="ios-btn primary" style="background: #34c759; margin: 0;">Restablecer</button>
+                <form action="/resetear_password/{{ u._id }}" method="POST" style="display: flex; gap: 10px; margin: 0; align-items: center; height: auto;">
+                    <input type="text" name="nueva_clave" placeholder="Nueva clave" required style="margin: 0; width: 150px; padding: 10px;">
+                    <button type="submit" class="ios-btn" style="background: var(--ios-green); margin: 0; padding: 10px 15px; width: auto;">Restablecer</button>
                 </form>
             </div>
         </div>
@@ -76,14 +157,12 @@
 <section class="admin-layout">
 
     <div class="card">
-        <h3>Asignar tarea</h3>
-
-        <form method="POST" action="{{ url_for('asignar_tarea') }}">
-            <input type="text" name="titulo" placeholder="Título" required>
-            <input type="text" name="descripcion" placeholder="Descripción" required>
+        <h3><i class="fas fa-plus-circle" style="margin-right: 8px;"></i>Asignar tarea</h3>
+        <form method="POST" action="{{ url_for('asignar_tarea') }}" style="display: flex; flex-direction: column; height: 100%;">
+            <input type="text" name="titulo" placeholder="Título" required autocomplete="off">
+            <input type="text" name="descripcion" placeholder="Descripción" required autocomplete="off">
 
             <h4>Asignar usuarios (mín. 1 – máx. 2)</h4>
-
             <div class="usuarios-checkbox">
                 {% for u in usuarios %}
                     <label>
@@ -98,58 +177,45 @@
     </div>
 
     <div class="card">
-        <h3>Gestión de usuarios</h3>
-
+        <h3><i class="fas fa-users" style="margin-right: 8px;"></i>Gestión de usuarios</h3>
         <ul class="lista-usuarios">
             {% for u in usuarios %}
                 <li>
                     <span>{{ u.nombre_usuario }}</span>
-                    <a href="{{ url_for('eliminar_usuario', id=u._id) }}"
-                       class="ios-btn danger">
-                        Eliminar
-                    </a>
+                    <a href="{{ url_for('eliminar_usuario', id=u._id) }}" class="ios-btn danger">Eliminar</a>
                 </li>
             {% endfor %}
         </ul>
-
-        <hr>
-
+        <hr style="border-color: var(--glass-border); width: 100%; margin: 20px 0;">
         <h4>Nuevo usuario</h4>
-        <form method="POST" action="{{ url_for('crear_usuario') }}">
-            <input type="text" name="usuario" placeholder="Usuario" required>
+        <form method="POST" action="{{ url_for('crear_usuario') }}" style="display: flex; flex-direction: column; height: 100%;">
+            <input type="text" name="usuario" placeholder="Usuario" required autocomplete="off">
             <input type="password" name="contrasena" placeholder="Contraseña" required>
             <button type="submit" class="ios-btn secondary">Crear</button>
         </form>
     </div>
 
     <div class="card grafica-card">
-        <h3>Estado de tareas</h3>
+        <h3><i class="fas fa-chart-bar" style="margin-right: 8px;"></i>Estado de tareas</h3>
         <canvas id="graficaTareas"></canvas>
     </div>
 
     <div class="card chat-card">
-        <h3>Chats de tareas</h3>
-
+        <h3><i class="fas fa-comments" style="margin-right: 8px;"></i>Chats de tareas</h3>
         {% if tareas %}
             <ul class="lista-tareas">
                 {% for t in tareas %}
                     <li class="tarea-chat-item">
                         <div>
-                            <strong>{{ t.titulo }}</strong><br>
-                            <small>
-                                Usuarios: {{ t.usuarios | join(", ") }}
-                            </small>
+                            <strong>{{ t.titulo }}</strong>
+                            <small>Usuarios: {{ t.usuarios | join(", ") }}</small>
                         </div>
-
-                        <a href="{{ url_for('ver_chat', tarea_id=t._id) }}"
-                           class="ios-btn ghost">
-                            Ver chat
-                        </a>
+                        <a href="{{ url_for('ver_chat', tarea_id=t._id) }}" class="ios-btn ghost-blue">Ver chat</a>
                     </li>
                 {% endfor %}
             </ul>
         {% else %}
-            <p>No hay tareas creadas.</p>
+            <p style="color: var(--text-muted); text-align: center; margin-top: 20px;">No hay tareas creadas.</p>
         {% endif %}
     </div>
 
@@ -159,8 +225,11 @@
 <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 
 <script>
-const ctx = document.getElementById("graficaTareas");
+// Forzar Chart.js a modo oscuro directamente aquí
+Chart.defaults.color = "rgba(255, 255, 255, 0.6)";
+Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif";
 
+const ctx = document.getElementById("graficaTareas");
 if (ctx) {
     new Chart(ctx, {
         type: "bar",
@@ -169,12 +238,27 @@ if (ctx) {
             datasets: [{
                 label: "Tareas",
                 data: [{{ tareas_pendientes }}, {{ tareas_completadas }}],
-                backgroundColor: ["#f9a825", "#43a047"]
+                // Colores Neón
+                backgroundColor: ["#ff9f0a", "#30d158"],
+                borderRadius: 8,
+                maxBarThickness: 70
             }]
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: { color: "rgba(255, 255, 255, 0.1)" },
+                    border: { display: false }
+                },
+                x: {
+                    grid: { display: false },
+                    border: { display: false }
+                }
+            }
         }
     });
 }

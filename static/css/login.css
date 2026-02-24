@@ -1,51 +1,130 @@
 /* ======================
-   LOGIN iOS STYLE
+   LOGIN macOS GLASS STYLE (DARK)
 ====================== */
 
 body {
     margin: 0;
     height: 100vh;
-    background: linear-gradient(180deg, #1c1c1e, #2c2c2e);
+    /* Fondo oscuro abstracto tipo Mac/iOS */
+    background: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop') no-repeat center center/cover;
+    background-color: #121212; /* Color de respaldo */
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: -apple-system, BlinkMacSystemFont, "San Francisco",
-                 "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "San Francisco", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 /* ======================
-   LOGIN CARD
+   MAC WINDOW (GLASSMORPHISM)
 ====================== */
 .login-card {
-    background: #ffffff;
-    width: 360px;
-    padding: 32px 26px;
-    border-radius: 22px;
-    box-shadow: 0 25px 50px rgba(0,0,0,0.35);
+    background: rgba(20, 20, 20, 0.55);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px); /* Soporte para Safari */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 100%;
+    max-width: 360px;
+    padding: 30px 40px 45px;
+    border-radius: 16px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.5);
     text-align: center;
+    color: #ffffff;
+    box-sizing: border-box;
 }
+
+/* ======================
+   MAC CONTROLS (Los 3 puntitos)
+====================== */
+.window-controls {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 25px;
+}
+.dot { width: 12px; height: 12px; border-radius: 50%; }
+.dot.red { background: #ff5f56; }
+.dot.yellow { background: #ffbd2e; }
+.dot.green { background: #27c93f; }
 
 /* ======================
    TITLE
 ====================== */
 .login-card h2 {
-    margin-bottom: 24px;
-    font-size: 22px;
+    margin-top: 0;
+    margin-bottom: 30px;
+    font-size: 28px;
     font-weight: 600;
-    color: #1c1c1e;
+    color: #ffffff;
+    letter-spacing: 0.5px;
 }
 
 /* ======================
-   INPUTS
+   INPUTS & ICONS
 ====================== */
-.login-card input {
+.input-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.login-card input[type="text"],
+.login-card input[type="password"] {
     width: 100%;
-    padding: 14px;
-    margin-bottom: 14px;
-    border-radius: 14px;
-    border: none;
-    background: #f2f2f7;
+    padding: 15px 20px;
+    padding-right: 45px; /* Espacio interno para que el texto no pise el ícono */
+    border-radius: 30px; /* Bordes redondos de píldora */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: transparent;
+    color: #ffffff;
     font-size: 15px;
+    box-sizing: border-box;
+    outline: none;
+    transition: border 0.3s ease;
+}
+
+.login-card input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.login-card input:focus {
+    border-color: #ffffff;
+}
+
+.input-group i {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #ffffff;
+    font-size: 16px;
+}
+
+/* ======================
+   OPTIONS (Remember me & Forgot)
+====================== */
+.options-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    margin-bottom: 30px;
+    color: #ffffff;
+}
+
+.options-row label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.options-row a {
+    color: #ffffff;
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+
+.options-row a:hover {
+    text-decoration: underline;
+    opacity: 0.8;
 }
 
 /* ======================
@@ -53,26 +132,33 @@ body {
 ====================== */
 .login-card button {
     width: 100%;
-    padding: 14px;
-    border-radius: 16px;
+    padding: 15px;
+    border-radius: 30px;
     border: none;
-    background: #007aff;
-    color: white;
+    background: #ffffff;
+    color: #000000;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: transform 0.1s ease, opacity 0.2s ease;
 }
 
 .login-card button:hover {
     opacity: 0.9;
 }
+.login-card button:active {
+    transform: scale(0.97);
+}
 
 /* ======================
-   ERROR
+   ERROR MESSAGE
 ====================== */
 .error {
-    margin-top: 12px;
-    color: #ff3b30;
+    margin-bottom: 20px;
+    color: #ff5f56;
+    background: rgba(255, 59, 48, 0.15);
+    border: 1px solid rgba(255, 59, 48, 0.3);
+    padding: 10px;
+    border-radius: 10px;
     font-size: 14px;
 }
