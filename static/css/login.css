@@ -1,0 +1,78 @@
+/* ======================
+   LOGIN iOS STYLE
+====================== */
+
+body {
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(180deg, #1c1c1e, #2c2c2e);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: -apple-system, BlinkMacSystemFont, "San Francisco",
+                 "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* ======================
+   LOGIN CARD
+====================== */
+.login-card {
+    background: #ffffff;
+    width: 360px;
+    padding: 32px 26px;
+    border-radius: 22px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.35);
+    text-align: center;
+}
+
+/* ======================
+   TITLE
+====================== */
+.login-card h2 {
+    margin-bottom: 24px;
+    font-size: 22px;
+    font-weight: 600;
+    color: #1c1c1e;
+}
+
+/* ======================
+   INPUTS
+====================== */
+.login-card input {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 14px;
+    border-radius: 14px;
+    border: none;
+    background: #f2f2f7;
+    font-size: 15px;
+}
+
+/* ======================
+   BUTTON
+====================== */
+.login-card button {
+    width: 100%;
+    padding: 14px;
+    border-radius: 16px;
+    border: none;
+    background: #007aff;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.login-card button:hover {
+    opacity: 0.9;
+}
+
+/* ======================
+   ERROR
+====================== */
+.error {
+    margin-top: 12px;
+    color: #ff3b30;
+    font-size: 14px;
+}

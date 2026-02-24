@@ -1,0 +1,328 @@
+/* ===================================================
+   TASSFLOW - iOS STYLE CLEAN
+   =================================================== */
+
+:root {
+    --ios-bg: #f2f2f7;
+    --ios-card: #ffffff;
+    --ios-blue: #007aff;
+    --ios-green: #34c759;
+    --ios-gray: #8e8e93;
+    --ios-border: rgba(0,0,0,0.06);
+}
+
+body {
+    margin: 0;
+    background: var(--ios-bg);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+    color: #1c1c1e;
+}
+
+/* ================= HEADER MODERNO ================= */
+header {
+    background: #111827;
+    padding: 28px 20px 20px 20px;
+    text-align: center;
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 25px;
+}
+
+/* Título */
+header h2 {
+    color: white;
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 18px;
+}
+
+/* Navegación */
+.user-nav {
+    display: flex;
+    justify-content: center;
+    gap: 28px;
+    margin-bottom: 12px;
+}
+
+.user-nav a {
+    text-decoration: none;
+    color: #9ca3af;
+    font-weight: 500;
+    font-size: 15px;
+    padding: 6px 12px;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+}
+
+/* Hover */
+.user-nav a:hover {
+    background: rgba(255,255,255,0.08);
+    color: white;
+}
+
+/* Activo */
+.user-nav a.active {
+    background: white;
+    color: #111827;
+    font-weight: 600;
+}
+
+/* Usuario + logout */
+.header-actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 6px;
+}
+
+.user-badge {
+    background: rgba(255,255,255,0.08);
+    color: #e5e7eb;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+}
+
+.header-actions a {
+    color: #f87171;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.header-actions a:hover {
+    color: #ef4444;
+}
+
+/* ================= DASHBOARD ================= */
+
+.user-dashboard {
+    max-width: 900px;
+    margin: auto;
+    padding: 30px 20px 60px;
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+/* ================= FILTRO ================= */
+
+.filtro-prioridad {
+    background: var(--ios-card);
+    padding: 14px 18px;
+    border-radius: 18px;
+    border: 1px solid var(--ios-border);
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    width: fit-content;
+    margin-bottom: 25px;
+}
+
+.filtro-prioridad select {
+    background: #e5e5ea;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 12px;
+    font-size: 14px;
+}
+
+/* ================= GRID ================= */
+
+.tareas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 18px;
+}
+
+/* ================= TARJETA ================= */
+
+.task-card {
+    background: var(--ios-card);
+    border-radius: 24px;
+    padding: 18px;
+    border: 1px solid var(--ios-border);
+    box-shadow: 0 4px 14px rgba(0,0,0,.04);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* ================= HEADER TARJETA ================= */
+
+.task-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.task-header h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* ================= ESTADO ================= */
+
+.estado {
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.estado.pendiente {
+    background: #fff4e6;
+    color: #e8590c;
+}
+
+.estado.completada {
+    background: #e6f9f0;
+    color: #0f9d58;
+}
+
+/* ================= DESCRIPCIÓN ================= */
+
+.task-desc {
+    font-size: 14px;
+    color: var(--ios-gray);
+    margin: 0;
+}
+
+/* ================= FOOTER ================= */
+
+.task-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.prioridad-tag {
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.prioridad-tag.alta {
+    background: #ffe5e5;
+    color: #d00000;
+}
+
+.prioridad-tag.media {
+    background: #fff4e6;
+    color: #e8590c;
+}
+
+.prioridad-tag.baja {
+    background: #e5f0ff;
+    color: #1d4ed8;
+}
+
+.prioridad-form select {
+    background: #e5e5ea;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 10px;
+    font-size: 12px;
+}
+
+/* ================= BOTONES ================= */
+
+.btn-completar {
+    background: var(--ios-green);
+    padding: 10px;
+    text-align: center;
+    border-radius: 14px;
+    color: white;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.completed {
+    text-align: center;
+    color: var(--ios-green);
+    font-weight: 600;
+    font-size: 14px;
+}
+
+/* ================= CHAT LINK ================= */
+
+.task-card a.btn-chat {
+    font-size: 13px;
+    text-decoration: none;
+    color: var(--ios-blue);
+    font-weight: 500;
+}
+
+/* ================= RESUMEN ================= */
+
+.resumen-usuario.compacto {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-top: 30px;
+}
+
+/* ================= PROGRESO ================= */
+
+.progreso-circulo {
+    width: 120px;
+    height: 120px;
+    margin: auto;
+    border-radius: 50%;
+    background: conic-gradient(
+        var(--ios-blue) calc(var(--valor) * 1%),
+        #e5e5ea 0
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.progreso-circulo span {
+    width: 85px;
+    height: 85px;
+    background: var(--ios-card);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* ================= CALENDARIO ================= */
+
+.calendario-card {
+    background: var(--ios-card);
+    border-radius: 20px;
+    padding: 18px;
+    border: 1px solid var(--ios-border);
+    box-shadow: 0 4px 14px rgba(0,0,0,.04);
+}
+
+/* FullCalendar estilo iOS */
+.fc {
+    font-family: inherit;
+}
+
+.fc-button {
+    background: #007aff;
+    border: none;
+    border-radius: 10px;
+    padding: 6px 12px;
+}
+
+.fc-button:hover {
+    background: #0063d1;
+}
+
+.fc-event {
+    border-radius: 8px;
+    padding: 2px 6px;
+    font-size: 12px;
+}

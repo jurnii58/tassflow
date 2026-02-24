@@ -1,0 +1,123 @@
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* BASE */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: #f8fafc;
+    color: #0f172a;
+}
+
+/* LINKS */
+a {
+    color: #2563eb;
+    text-decoration: none;
+}
+
+/* HEADER BASE (mínimo) */
+header {
+    padding: 14px 24px;
+}
+
+/* INPUTS BASE */
+input,
+select {
+    padding: 9px 12px;
+    border-radius: 10px;
+    border: 1px solid #cbd5e1;
+    font-size: 14px;
+}
+/* ===== MOBILE FIRST ===== */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 10px;
+    font-family: Arial, sans-serif;
+}
+
+/* contenedores */
+.container,
+main,
+.panel,
+.card {
+    width: 100%;
+    max-width: 100%;
+}
+
+/* tablas responsive */
+table {
+    width: 100%;
+    display: block;
+    overflow-x: auto;
+}
+
+/* botones */
+button {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+}
+
+/* inputs */
+input, select, textarea {
+    width: 100%;
+    font-size: 16px;
+    padding: 10px;
+}
+
+/* cards */
+.card {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+/* evitar que cosas se salgan */
+img {
+    max-width: 100%;
+}
+
+/* header responsive */
+header {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* desktop */
+@media (min-width: 768px) {
+
+    .container {
+        max-width: 900px;
+        margin: auto;
+    }
+
+    button {
+        width: auto;
+    }
+
+}
+body {
+    background: #f2f5f9;
+}
+
+.card {
+    background: white;
+    border-radius: 15px;
+    padding: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+header {
+    background: linear-gradient(90deg, #0f172a, #1e3a8a);
+    color: white;
+    padding: 15px;
+    border-radius: 0 0 15px 15px;
+}

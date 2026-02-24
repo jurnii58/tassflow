@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel de Usuario</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <!-- ================= CSS ================= -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/usuario.css') }}">
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header>
+    <h2>Panel del Usuario</h2>
+
+    <nav class="user-nav">
+        <a href="{{ url_for('usuario_panel') }}">📋 Mis tareas</a>
+        <a href="{{ url_for('usuario_calendario') }}" class="btn-calendario">📅 Ver calendario</a>
+        <a href="{{ url_for('usuario_estadisticas') }}">📊 Estadísticas</a>
+
+    </nav>
+
+    <div class="header-actions">
+        <span class="user-badge">{{ session.usuario }}</span>
+        <a href="{{ url_for('logout') }}">Cerrar sesión</a>
+    </div>
+</header>
+
+<!-- ================= MAIN ================= -->
+<main class="user-dashboard">
+
+    <h3 class="section-title">Mis tareas</h3>
+
+    <!-- ================= FILTRO ================= -->
+    <div class="filtro-prioridad">
+        <label for="filtro">Filtrar por prioridad</label>
+        <select id="filtro">
+            <option value="todas">Todas</option>
+            <option value="Alta">Alta</option>
+            <option value="Media">Media</option>
+            <option value="Baja">Baja</option>
+        </select>
+    </div>
+
+    {% if tareas|length == 0 %}
+        <p class="empty-msg">No tienes tareas asignadas 🎉</p>
+    {% endif %}
+
+    <!-- ================= TARJETAS ================= -->
+    <div class="tareas-grid">
+        {% for t in tareas %}
+        <div class="task-card {{ (t.prioridad or 'Media')|lower }}"
+             data-prioridad="{{ t.prioridad or 'Media' }}">
+
+            <!-- HEADER -->
+            <div class="task-header">
+                <h4>{{ t.titulo }}</h4>
+                <span class="estado {{ t.estado|lower }}">
+                    {{ t.estado }}
+                </span>
+            </div>
+
+            <!-- DESCRIPCIÓN -->
+            <p class="task-desc">{{ t.descripcion }}</p>
+
+            <!-- FOOTER -->
+            <div class="task-footer">
+                <span class="prioridad-tag {{ (t.prioridad or 'Media')|lower }}">
+                    {{ t.prioridad or "Media" }}
+                </span>
+
+                <form method="POST"
+                      action="{{ url_for('cambiar_prioridad', id=t._id) }}"
+                      class="prioridad-form">
+
+                    <select name="prioridad" onchange="this.form.submit()">
+                        <option value="Alta" {{ 'selected' if t.prioridad == 'Alta' }}>Alta</option>
+                        <option value="Media" {{ 'selected' if t.prioridad == 'Media' or not t.prioridad }}>Media</option>
+                        <option value="Baja" {{ 'selected' if t.prioridad == 'Baja' }}>Baja</option>
+                    </select>
+                </form>
+            </div>
+
+            <!-- ACCIONES -->
+            <div class="task-actions">
+                {% if t.estado == "Pendiente" %}
+                    <a href="{{ url_for('completar_tarea', id=t._id) }}"
+                       class="btn-completar">
+                        Marcar como completada
+                    </a>
+                {% else %}
+                    <span class="completed">✔ Tarea finalizada</span>
+                {% endif %}
+
+                <a href="{{ url_for('ver_chat', tarea_id=t._id) }}"
+                   class="btn-chat">
+                    💬 Ver chat
+                </a>
+            </div>
+
+        </div>
+        {% endfor %}
+    </div>
+
+</main>
+
+<!-- ================= JS ================= -->
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+</body>
+</html>

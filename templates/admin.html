@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Administrador</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+
+    <!-- CHART JS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<header>
+    <h2>Panel del Administrador</h2>
+    <div class="header-actions">
+        <span>{{ session["usuario"] }}</span>
+        <a href="{{ url_for('logout') }}">Cerrar sesión</a>
+    </div>
+</header>
+
+<!-- ================= ESTADÍSTICAS ================= -->
+<section class="stats">
+    <div class="stat">
+        <h4>Usuarios</h4>
+        <p>{{ total_usuarios }}</p>
+    </div>
+    <div class="stat">
+        <h4>Tareas</h4>
+        <p>{{ total_tareas }}</p>
+    </div>
+    <div class="stat">
+        <h4>Pendientes</h4>
+        <p>{{ tareas_pendientes }}</p>
+    </div>
+    <div class="stat">
+        <h4>Completadas</h4>
+        <p>{{ tareas_completadas }}</p>
+    </div>
+</section>
+
+<!--  GRÁFICA -->
+<section class="admin-layout">
+    <div class="card">
+        <h3>Estado de tareas</h3>
+        <canvas id="graficaTareas"></canvas>
+    </div>
+</section>
+
+<!-- PANEL ADMIN-->
+<section class="admin-layout">
+
+    <!-- ASIGNAR TAREA -->
+    <div class="card">
+        <h3>Asignar tarea</h3>
+
+        <form method="POST" action="{{ url_for('asignar_tarea') }}">
+            <input type="text" name="titulo" placeholder="Título" required>
+            <input type="text" name="descripcion" placeholder="Descripción" required>
+
+            <select name="usuario_id" required>
+                <option value="">Seleccionar usuario</option>
+                {% for u in usuarios %}
+                    <option value="{{ u.nombre_usuario }}">
+                        {{ u.nombre_usuario }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <button class="btn">Asignar</button>
+        </form>
+    </div>
+
+    <!-- USUARIOS -->
+    <div class="card">
+        <h3>Gestión de usuarios</h3>
+
+        <ul class="lista-usuarios">
+            {% for u in usuarios %}
+            <li>
+                {{ u.nombre_usuario }}
+                <a href="{{ url_for('eliminar_usuario', id=u._id) }}"
+                   class="btn btn-danger">
+                   Eliminar
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+
+        <hr>
+
+        <h4>Nuevo usuario</h4>
+        <form method="POST" action="{{ url_for('crear_usuario') }}">
+            <input type="text" name="usuario" placeholder="Usuario" required>
+            <input type="password" name="contrasena" placeholder="Contraseña" required>
+            <button class="btn">Crear</button>
+        </form>
+    </div>
+    <!-- ===== CHATS DE TAREAS ===== -->
+<div class="card">
+    <h3>Chats de tareas</h3>
+
+    {% if tareas %}
+        <ul class="lista-tareas">
+            {% for t in tareas %}
+                <li class="tarea-item">
+                    <div>
+                        <strong>{{ t.titulo }}</strong><br>
+                        <small>Usuarios: {{ t.usuarios | join(", ") }}</small><br>
+                        <small>Estado: {{ t.estado }}</small>
+                    </div>
+
+                    <a href="{{ url_for('ver_chat', tarea_id=t._id) }}"
+                       class="btn-chat">
+                        💬 Ver chat
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No hay tareas creadas.</p>
+    {% endif %}
+</div>
+</section>
+
+<!-- JS GRÁFICA -->
+<script>
+const ctx = document.getElementById('graficaTareas');
+
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Pendientes', 'Completadas'],
+        datasets: [{
+            data: [{{ tareas_pendientes }}, {{ tareas_completadas }}],
+            backgroundColor: ['#f9a825', '#43a047']
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { display: false }
+        }
+    }
+});
+</script>
+
+</body>
+</html>

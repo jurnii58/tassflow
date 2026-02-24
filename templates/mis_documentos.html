@@ -1,0 +1,21 @@
+<h2>Mis documentos</h2>
+
+<ul class="lista-tareas">
+{% for d in documentos %}
+<li class="tarea-chat-item">
+    <div>
+        <strong>{{ d.nombre }}</strong><br>
+        <small>{{ d.descripcion }}</small><br>
+        <span>Estado: {{ d.estado }}</span>
+    </div>
+
+    {% if d.estado == "Pendiente" %}
+    <form method="POST" enctype="multipart/form-data"
+          action="{{ url_for('subir_documento', id=d._id) }}">
+        <input type="file" name="archivo" required>
+        <button class="btn-chat">Subir</button>
+    </form>
+    {% endif %}
+</li>
+{% endfor %}
+</ul>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Asignar Tareas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+
+<header>
+    <h2> Asignar Tareas a {{ nombre_usuario }}</h2>
+    <a href="/admin/usuarios">⬅ Volver</a>
+</header>
+
+<section>
+    <h3>Nueva tarea</h3>
+
+    <form method="POST">
+        <input type="text" name="titulo" placeholder="Título de la tarea" required>
+        <textarea name="descripcion" placeholder="Descripción de la tarea" required></textarea>
+
+        <select name="prioridad" required>
+            <option value="">Selecciona prioridad</option>
+            <option value="Alta">Alta</option>
+            <option value="Media">Media</option>
+            <option value="Baja">Baja</option>
+        </select>
+
+        <button type="submit">✅ Asignar tarea</button>
+    </form>
+</section>
+
+<section>
+    <h3>Tareas asignadas a este usuario</h3>
+
+    {% if tareas %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Descripción</th>
+                    <th>Prioridad</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in tareas %}
+                <tr class="prioridad-{{ t.prioridad | lower }}">
+                    <td>{{ t.titulo }}</td>
+                    <td>{{ t.descripcion }}</td>
+                    <td>
+                        <span class="badge {{ t.prioridad | lower }}">
+                            {{ t.prioridad }}
+                        </span>
+                    </td>
+                    <td>{{ t.estado }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No hay tareas asignadas a este usuario.</p>
+    {% endif %}
+</section>
+
+</body>
+</html>

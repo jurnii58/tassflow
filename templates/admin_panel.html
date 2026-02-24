@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Administrador</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ios.css') }}">
+</head>
+<body>
+
+<header class="header">
+    <h2>Panel del Administrador</h2>
+    <div class="header-actions">
+        <span class="user-badge">{{ session["usuario"] }}</span>
+        <a href="{{ url_for('logout') }}" class="ios-btn ghost">Cerrar sesión</a>
+    </div>
+</header>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div style="background: #fee2e2; color: #991b1b; padding: 15px; text-align: center; max-width: 1200px; margin: 20px auto; border-radius: 12px; font-weight: bold;">
+      {% for message in messages %}
+        <p style="margin: 0;">{{ message }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<section class="stats">
+    <div class="stat">
+        <h4>Usuarios</h4>
+        <p>{{ total_usuarios }}</p>
+    </div>
+    <div class="stat">
+        <h4>Tareas</h4>
+        <p>{{ total_tareas }}</p>
+    </div>
+    <div class="stat">
+        <h4>Pendientes</h4>
+        <p>{{ tareas_pendientes }}</p>
+    </div>
+    <div class="stat">
+        <h4>Completadas</h4>
+        <p>{{ tareas_completadas }}</p>
+    </div>
+</section>
+
+{% set has_alerts = false %}
+{% for u in usuarios if u.solicitud_reset %}
+    {% set has_alerts = true %}
+{% endfor %}
+
+{% if has_alerts %}
+<section style="max-width: 1200px; margin: 0 auto 20px;">
+    {% for u in usuarios %}
+        {% if u.get('solicitud_reset') %}
+        <div class="card" style="border-left: 5px solid #ff3b30; background: white; padding: 20px; border-radius: 18px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 15px;">
+            <h3 style="margin-top: 0; color: #ff3b30;">⚠️ Recuperación Solicitada</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0;">
+                <span>El usuario <b>{{ u.nombre_usuario }}</b> olvidó su clave.</span>
+                
+                <form action="/resetear_password/{{ u._id }}" method="POST" style="display: flex; gap: 10px; margin: 0; align-items: center;">
+                    <input type="text" name="nueva_clave" placeholder="Nueva clave" required style="padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px;">
+                    <button type="submit" class="ios-btn primary" style="background: #34c759; margin: 0;">Restablecer</button>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+    {% endfor %}
+</section>
+{% endif %}
+
+<section class="admin-layout">
+
+    <div class="card">
+        <h3>Asignar tarea</h3>
+
+        <form method="POST" action="{{ url_for('asignar_tarea') }}">
+            <input type="text" name="titulo" placeholder="Título" required>
+            <input type="text" name="descripcion" placeholder="Descripción" required>
+
+            <h4>Asignar usuarios (mín. 1 – máx. 2)</h4>
+
+            <div class="usuarios-checkbox">
+                {% for u in usuarios %}
+                    <label>
+                        <input type="checkbox" name="usuarios" value="{{ u.nombre_usuario }}">
+                        {{ u.nombre_usuario }}
+                    </label>
+                {% endfor %}
+            </div>
+
+            <button type="submit" class="ios-btn primary">Asignar</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h3>Gestión de usuarios</h3>
+
+        <ul class="lista-usuarios">
+            {% for u in usuarios %}
+                <li>
+                    <span>{{ u.nombre_usuario }}</span>
+                    <a href="{{ url_for('eliminar_usuario', id=u._id) }}"
+                       class="ios-btn danger">
+                        Eliminar
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <hr>
+
+        <h4>Nuevo usuario</h4>
+        <form method="POST" action="{{ url_for('crear_usuario') }}">
+            <input type="text" name="usuario" placeholder="Usuario" required>
+            <input type="password" name="contrasena" placeholder="Contraseña" required>
+            <button type="submit" class="ios-btn secondary">Crear</button>
+        </form>
+    </div>
+
+    <div class="card grafica-card">
+        <h3>Estado de tareas</h3>
+        <canvas id="graficaTareas"></canvas>
+    </div>
+
+    <div class="card chat-card">
+        <h3>Chats de tareas</h3>
+
+        {% if tareas %}
+            <ul class="lista-tareas">
+                {% for t in tareas %}
+                    <li class="tarea-chat-item">
+                        <div>
+                            <strong>{{ t.titulo }}</strong><br>
+                            <small>
+                                Usuarios: {{ t.usuarios | join(", ") }}
+                            </small>
+                        </div>
+
+                        <a href="{{ url_for('ver_chat', tarea_id=t._id) }}"
+                           class="ios-btn ghost">
+                            Ver chat
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No hay tareas creadas.</p>
+        {% endif %}
+    </div>
+
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+<script>
+const ctx = document.getElementById("graficaTareas");
+
+if (ctx) {
+    new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: ["Pendientes", "Completadas"],
+            datasets: [{
+                label: "Tareas",
+                data: [{{ tareas_pendientes }}, {{ tareas_completadas }}],
+                backgroundColor: ["#f9a825", "#43a047"]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+}
+</script>
+
+</body>
+</html>

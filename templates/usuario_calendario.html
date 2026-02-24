@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Calendario</title>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css">
+
+<style>
+
+body{
+    background:#f2f2f7;
+    font-family:-apple-system;
+}
+
+.header{
+    background:linear-gradient(180deg,#0f172a,#1e293b);
+    color:white;
+    padding:20px;
+    text-align:center;
+}
+
+.cal-container{
+    max-width:800px;
+    margin:20px auto;
+    background:white;
+    padding:20px;
+    border-radius:16px;
+}
+
+#calendario{
+    width:100%;
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="header">
+<h2>📅 Calendario de tareas</h2>
+<a href="/usuario" style="color:#60a5fa">← Volver</a>
+</div>
+
+<div class="cal-container">
+<div id="calendario"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    const calendarEl = document.getElementById("calendario");
+
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+
+        initialView:"dayGridMonth",
+
+        locale:"es",
+
+        events: {{ eventos | tojson | safe }}
+
+    });
+
+    calendar.render();
+
+});
+
+</script>
+
+</body>
+</html>

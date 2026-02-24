@@ -1,0 +1,228 @@
+/* ================= HEADER ================= */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: #fff;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.user-badge {
+    background: #2563eb;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+}
+
+.logout {
+    color: #f87171;
+    font-weight: bold;
+}
+
+/* ================= STATS ================= */
+.stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    padding: 20px;
+}
+
+.stat {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 18px;
+    text-align: center;
+    box-shadow: 0 8px 18px rgba(0,0,0,.06);
+}
+
+.stat h4 {
+    font-size: 14px;
+    color: #475569;
+}
+
+.stat p {
+    font-size: 28px;
+    font-weight: bold;
+    color: #0f172a;
+}
+
+/* ================= LAYOUT ================= */
+.admin-layout {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 22px;
+    padding: 22px;
+}
+
+/* ================= CARDS ================= */
+.card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 12px 25px rgba(0,0,0,.08);
+    display: flex;
+    flex-direction: column;
+}
+
+.card h3 {
+    margin-bottom: 14px;
+}
+
+/* ================= FORM ================= */
+.card form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* ================= USERS ================= */
+.lista-usuarios {
+    list-style: none;
+    padding: 0;
+}
+
+.lista-usuarios li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+}
+
+/* ================= CHAT LIST ================= */
+.lista-tareas {
+    list-style: none;
+    padding: 0;
+}
+
+.tarea-chat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f8fafc;
+    padding: 12px 14px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+}
+
+/* ================= BOTONES ================= */
+.btn-chat {
+    background: #2563eb;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+}
+
+/* ================= GRAFICA (FIX LOOP) ================= */
+.grafica-card {
+    height: 320px;        /* 🔑 CLAVE */
+    max-height: 320px;
+    position: relative;
+    overflow: hidden;
+}
+
+.grafica-card canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* === iOS STYLE BUTTONS === */
+.admin-btn {
+    background: linear-gradient(180deg, #ffffff, #f1f1f1);
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 14px;
+    padding: 10px 18px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #1c1c1e;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.admin-btn:hover {
+    background: #f9f9f9;
+}
+
+.admin-btn:active {
+    transform: scale(0.96);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+/* Separación interna de cards */
+.card {
+    padding: 20px;
+}
+
+/* Inputs dentro del admin */
+.card input {
+    width: 100%;
+    margin-bottom: 12px;
+    background: #f2f2f7;
+    border-radius: 14px;
+    border: none;
+    padding: 12px;
+}
+
+/* Checkboxes bien alineados */
+.usuarios-checkbox {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.usuarios-checkbox label {
+    background: #f2f2f7;
+    padding: 8px 12px;
+    border-radius: 12px;
+    font-size: 14px;
+}
+
+/* =========================
+   BOTONES iOS
+========================= */
+.card button,
+.btn-chat,
+.btn-danger {
+    border-radius: 16px;
+    padding: 10px 16px;
+    font-weight: 500;
+}
+
+/* Eliminar */
+.btn-danger {
+    background: #ff3b30;
+    color: white;
+    border: none;
+}
+
+/* =========================
+   LISTAS CON BORDE VISUAL
+========================= */
+.lista-usuarios li,
+.lista-tareas li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 14px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.06);
+}
+
+/* =========================
+   CHAT ITEMS
+========================= */
+.tarea-chat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

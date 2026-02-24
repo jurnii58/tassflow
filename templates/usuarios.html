@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Usuario</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/usuario.css') }}">
+</head>
+
+<body>
+
+<header>
+    <h2>Panel del Usuario</h2>
+    <div class="header-actions">
+        <span>{{ session["usuario"] }}</span>
+        <a href="{{ url_for('logout') }}">Cerrar sesión</a>
+    </div>
+</header>
+
+<main class="user-dashboard">
+    <h3 class="section-title">Mis tareas</h3>
+
+    {% if tareas|length == 0 %}
+        <p>No tienes tareas 🎉</p>
+    {% endif %}
+</main>
+
+</body>
+</html>
