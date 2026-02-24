@@ -76,19 +76,83 @@
         .ios-btn.primary { background: var(--ios-blue); }
         .ios-btn.secondary { background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); color: var(--text-main); }
         .ios-btn.danger { background: rgba(255, 69, 58, 0.15); color: var(--ios-red); border: 1px solid rgba(255, 69, 58, 0.3); padding: 8px 15px; width: auto; font-size: 12px; margin-top: 0;}
+        .ios-btn.warning { background: rgba(255, 159, 10, 0.2); color: var(--ios-orange); border: 1px solid rgba(255, 159, 10, 0.4); padding: 8px 15px; width: auto; font-size: 12px; margin-top: 0;}
         .ios-btn.ghost-blue { background: transparent; color: var(--ios-blue); border: 1px solid var(--ios-blue); padding: 8px 15px; width: auto; font-size: 12px; margin-top: 0;}
         .ios-btn:hover { opacity: 0.8; }
         .ios-btn:active { transform: scale(0.97); }
+
+        .btn-del-task {
+            width: 36px !important;
+            padding: 8px 0 !important;
+            background: rgba(255, 69, 58, 0.15) !important;
+            color: var(--ios-red) !important;
+            border: 1px solid rgba(255, 69, 58, 0.3) !important;
+            cursor: pointer;
+        }
+        .btn-del-task:hover { background: var(--ios-red) !important; color: white !important; }
 
         .lista-usuarios, .lista-tareas { list-style: none; padding: 0; margin: 0; }
         .lista-usuarios li, .tarea-chat-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--glass-border); }
         .lista-usuarios li:last-child, .tarea-chat-item:last-child { border-bottom: none; }
         .tarea-chat-item div { flex: 1; }
         .tarea-chat-item strong { display: block; font-size: 15px; margin-bottom: 4px; }
-        .tarea-chat-item small { color: var(--text-muted); font-size: 12px; }
+        .tarea-chat-item small { color: var(--text-muted); font-size: 12px; display: block; }
 
         .grafica-card { position: relative; height: 320px; width: 100%; display: flex; flex-direction: column;}
         .grafica-card canvas { width: 100% !important; flex: 1; max-height: 250px;}
+
+        /* ================= VENTANA MODAL (PANTALLITA) ================= */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-box {
+            background: rgba(30, 30, 30, 0.85);
+            border: 1px solid var(--glass-border);
+            padding: 30px;
+            border-radius: 24px;
+            max-width: 350px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-box { transform: translateY(0); }
+        .modal-box i { font-size: 40px; margin-bottom: 15px; }
+        .modal-box h3 { margin: 0 0 10px 0; font-size: 20px; }
+        .modal-box p { color: var(--text-muted); font-size: 14px; line-height: 1.5; margin-bottom: 25px; }
+        .modal-actions { display: flex; gap: 10px; }
+        .modal-actions button, .modal-actions a { margin-top: 0; }
+        
+        /* Animación Alerta */
+        @keyframes pulsoAlerta {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .icono-alerta-usuario {
+            color: var(--ios-orange);
+            margin-left: 8px;
+            font-size: 14px;
+            animation: pulsoAlerta 1.5s infinite;
+        }
     </style>
 </head>
 <body>
@@ -137,20 +201,12 @@
 
 {% if has_alerts %}
 <section style="max-width: 1200px; margin: 0 auto 25px; padding: 0 20px;">
-    {% for u in usuarios %}
-        {% if u.get('solicitud_reset') %}
-        <div class="card" style="border-left: 5px solid var(--ios-red); margin-bottom: 15px;">
-            <h3 style="color: var(--ios-red); border-bottom: none; margin-bottom: 10px;">⚠️ Recuperación Solicitada</h3>
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0;">
-                <span>El usuario <b>{{ u.nombre_usuario }}</b> olvidó su clave.</span>
-                <form action="/resetear_password/{{ u._id }}" method="POST" style="display: flex; gap: 10px; margin: 0; align-items: center; height: auto;">
-                    <input type="text" name="nueva_clave" placeholder="Nueva clave" required style="margin: 0; width: 150px; padding: 10px;">
-                    <button type="submit" class="ios-btn" style="background: var(--ios-green); margin: 0; padding: 10px 15px; width: auto;">Restablecer</button>
-                </form>
-            </div>
+    <div class="card" style="border-left: 5px solid var(--ios-orange); margin-bottom: 15px; flex-direction: row; justify-content: space-between; align-items: center; padding: 15px 25px;">
+        <div>
+            <h3 style="color: var(--ios-orange); border-bottom: none; margin-bottom: 5px; margin-top: 0;"><i class="fas fa-bell"></i> Solicitudes de Contraseña</h3>
+            <span style="color: var(--text-muted); font-size: 14px;">Hay usuarios que olvidaron su clave. Revisa la lista abajo.</span>
         </div>
-        {% endif %}
-    {% endfor %}
+    </div>
 </section>
 {% endif %}
 
@@ -181,8 +237,26 @@
         <ul class="lista-usuarios">
             {% for u in usuarios %}
                 <li>
-                    <span>{{ u.nombre_usuario }}</span>
-                    <a href="{{ url_for('eliminar_usuario', id=u._id) }}" class="ios-btn danger">Eliminar</a>
+                    <span>
+                        {{ u.nombre_usuario }}
+                        {% if u.get('solicitud_reset') %}
+                            <i class="fas fa-key icono-alerta-usuario" title="¡Este usuario olvidó su contraseña!"></i>
+                        {% endif %}
+                    </span>
+                    
+                    <div style="display: flex; gap: 8px;">
+                        {% if u.get('solicitud_reset') %}
+                            <button type="button" class="ios-btn warning" 
+                                    onclick="abrirModalReset('{{ url_for('resetear_password', id=u._id) }}', '{{ u.nombre_usuario }}')">
+                                Restablecer
+                            </button>
+                        {% endif %}
+
+                        <button type="button" class="ios-btn danger" 
+                                onclick="abrirModalUsuario('{{ url_for('eliminar_usuario', id=u._id) }}', '{{ u.nombre_usuario }}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
                 </li>
             {% endfor %}
         </ul>
@@ -209,8 +283,16 @@
                         <div>
                             <strong>{{ t.titulo }}</strong>
                             <small>Usuarios: {{ t.usuarios | join(", ") }}</small>
+                            <small>Estado: {{ t.estado }}</small>
                         </div>
-                        <a href="{{ url_for('ver_chat', tarea_id=t._id) }}" class="ios-btn ghost-blue">Ver chat</a>
+                        <div style="display: flex; gap: 8px;">
+                            <a href="{{ url_for('ver_chat', tarea_id=t._id) }}" class="ios-btn ghost-blue">Ver chat</a>
+                            
+                            <button type="button" class="ios-btn btn-del-task" 
+                                    onclick="abrirModalTarea('{{ url_for('eliminar_tarea', tarea_id=t._id) }}')">
+                               <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
                     </li>
                 {% endfor %}
             </ul>
@@ -221,11 +303,84 @@
 
 </section>
 
+<div id="modalEliminarTarea" class="modal-overlay">
+    <div class="modal-box">
+        <i class="fas fa-exclamation-triangle" style="color: var(--ios-red);"></i>
+        <h3>Eliminar Tarea</h3>
+        <p>¿Estás seguro de que deseas eliminar esta tarea y todo su historial de mensajes? Esta acción no se puede deshacer.</p>
+        <div class="modal-actions">
+            <button type="button" class="ios-btn secondary" onclick="cerrarModal('modalEliminarTarea')">Cancelar</button>
+            <a id="btnConfirmarEliminarTarea" href="#" class="ios-btn danger" style="margin-top: 0;">Sí, eliminar</a>
+        </div>
+    </div>
+</div>
+
+<div id="modalEliminarUsuario" class="modal-overlay">
+    <div class="modal-box">
+        <i class="fas fa-user-times" style="color: var(--ios-red);"></i>
+        <h3>Eliminar Usuario</h3>
+        <p>¿Deseas revocar el acceso a <strong id="nombreUsuarioModal"></strong>? Sus tareas quedarán sin asignar.</p>
+        <div class="modal-actions">
+            <button type="button" class="ios-btn secondary" onclick="cerrarModal('modalEliminarUsuario')">Cancelar</button>
+            <a id="btnConfirmarEliminarUsuario" href="#" class="ios-btn danger" style="margin-top: 0;">Sí, eliminar</a>
+        </div>
+    </div>
+</div>
+
+<div id="modalResetPassword" class="modal-overlay">
+    <div class="modal-box">
+        <i class="fas fa-key" style="color: var(--ios-orange);"></i>
+        <h3>Restablecer Clave</h3>
+        <p>Ingresa una nueva contraseña segura para el usuario <strong id="nombreUsuarioResetModal" style="color: var(--text-main);"></strong>.</p>
+        
+        <form id="formResetPassword" method="POST" action="" style="display: flex; flex-direction: column; gap: 15px;">
+            <input type="text" name="nueva_clave" placeholder="Nueva contraseña" required 
+                   style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.3); color: white; outline: none; margin: 0; box-sizing: border-box;">
+            
+            <div class="modal-actions">
+                <button type="button" class="ios-btn secondary" onclick="cerrarModal('modalResetPassword')">Cancelar</button>
+                <button type="submit" class="ios-btn" style="background: var(--ios-orange); margin-top: 0;">Actualizar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="{{ url_for('static', filename='js/app.js') }}"></script>
 
 <script>
-// Forzar Chart.js a modo oscuro directamente aquí
+/* ================= LÓGICA DE LAS PANTALLITAS MODALES ================= */
+function abrirModalTarea(urlEliminar) {
+    const modal = document.getElementById('modalEliminarTarea');
+    document.getElementById('btnConfirmarEliminarTarea').href = urlEliminar;
+    modal.classList.add('active');
+}
+
+function abrirModalUsuario(urlEliminar, nombreUsuario) {
+    const modal = document.getElementById('modalEliminarUsuario');
+    document.getElementById('btnConfirmarEliminarUsuario').href = urlEliminar;
+    document.getElementById('nombreUsuarioModal').innerText = nombreUsuario;
+    modal.classList.add('active');
+}
+
+// LÓGICA DE LA NUEVA PANTALLITA DE CONTRASEÑAS
+function abrirModalReset(urlReset, nombreUsuario) {
+    const modal = document.getElementById('modalResetPassword');
+    document.getElementById('formResetPassword').action = urlReset;
+    document.getElementById('nombreUsuarioResetModal').innerText = nombreUsuario;
+    modal.classList.add('active');
+}
+
+function cerrarModal(modalId) {
+    document.getElementById(modalId).classList.remove('active');
+}
+
+window.onclick = function(event) {
+    if (event.target.classList.contains('modal-overlay')) {
+        event.target.classList.remove('active');
+    }
+}
+
+/* ================= GRÁFICA ================= */
 Chart.defaults.color = "rgba(255, 255, 255, 0.6)";
 Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif";
 
@@ -238,7 +393,6 @@ if (ctx) {
             datasets: [{
                 label: "Tareas",
                 data: [{{ tareas_pendientes }}, {{ tareas_completadas }}],
-                // Colores Neón
                 backgroundColor: ["#ff9f0a", "#30d158"],
                 borderRadius: 8,
                 maxBarThickness: 70

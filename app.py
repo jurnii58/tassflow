@@ -9,9 +9,8 @@ import re
 app = Flask(__name__)
 app.secret_key = "secreto"
 
-# =========================
+
 # ARCHIVOS
-# =========================
 UPLOAD_FOLDER = "static/uploads"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -27,9 +26,8 @@ tareas_col = db["tareas"]
 mensajes_col = db["mensajes"]
 documentos_col = db["documentos"]
 
-# =========================
 # LOGIN
-# =========================
+
 @app.route("/", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -52,9 +50,8 @@ def login():
 
     return render_template("login.html")
 
-# =========================
 # ADMIN
-# =========================
+
 @app.route("/admin")
 def admin_panel():
     if session.get("rol") != "admin":
@@ -70,9 +67,8 @@ def admin_panel():
         tareas_completadas=tareas_col.count_documents({"estado": "Completada"})
     )
 
-# =========================
+
 # CREAR / ELIMINAR USUARIO
-# =========================
 
 @app.route("/crear_usuario", methods=["POST"])
 def crear_usuario():
@@ -112,9 +108,8 @@ def eliminar_usuario(id):
 
     return redirect(url_for("admin_panel"))
 
-# =========================
+
 # ASIGNAR TAREA
-# =========================
 @app.route("/asignar_tarea", methods=["POST"])
 def asignar_tarea():
     if session.get("rol") != "admin":
@@ -136,9 +131,9 @@ def asignar_tarea():
 
     return redirect(url_for("admin_panel"))
 
-# =========================
+
 # USUARIO
-# =========================
+
 @app.route("/usuario")
 def usuario_panel():
     if session.get("rol") != "usuario":
@@ -152,7 +147,7 @@ def usuario_panel():
 
     progreso = int((completadas / total) * 100) if total > 0 else 0
 
-    # 👉 convertir fecha a string para FullCalendar
+    #calendario
     for t in tareas:
         if isinstance(t.get("fecha_creacion"), datetime):
             t["fecha_creacion"] = t["fecha_creacion"].strftime("%Y-%m-%d")
@@ -164,9 +159,8 @@ def usuario_panel():
         completadas=completadas,
         progreso=progreso
     )
-# =========================
 # CALENDARIO USUARIO
-# =========================
+
 @app.route("/usuario/calendario")
 def usuario_calendario():
 
@@ -201,9 +195,9 @@ def usuario_calendario():
         "usuario_calendario.html",
         eventos=eventos
     )
-# =========================
+
 # ESTADISTICAS USUARIO
-# =========================
+
 @app.route("/usuario/estadisticas")
 def usuario_estadisticas():
 
@@ -223,9 +217,8 @@ def usuario_estadisticas():
         total=total
     )
 
-# =========================
 # CAMBIOS DE TAREA
-# =========================
+
 @app.route("/cambiar_prioridad/<id>", methods=["POST"])
 def cambiar_prioridad(id):
     tareas_col.update_one(
@@ -242,9 +235,9 @@ def completar_tarea(id):
     )
     return redirect(url_for("usuario_panel"))
 
-# =========================
+
 # CHAT
-# =========================
+
 @app.route("/chat/<tarea_id>")
 def ver_chat(tarea_id):
     tarea = tareas_col.find_one({"_id": ObjectId(tarea_id)})
@@ -280,9 +273,9 @@ def enviar_mensaje(tarea_id):
     mensajes_col.insert_one(mensaje)
     return redirect(url_for("ver_chat", tarea_id=tarea_id))
 
-# =========================
+
 # DOCUMENTOS
-# =========================
+
 @app.route("/solicitar_documento/<tarea_id>", methods=["POST"])
 def solicitar_documento(tarea_id):
     documentos_col.insert_one({
@@ -380,7 +373,6 @@ def resetear_password(id):
     
     nueva_clave = request.form["nueva_clave"]
     
-    # Aplicar la MISMA regla de seguridad aquí
     regex = r"^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
     if not re.match(regex, nueva_clave):
         flash("Error: La nueva contraseña debe tener 8 caracteres, una mayúscula, un número y un símbolo.")
@@ -393,9 +385,24 @@ def resetear_password(id):
     flash("Contraseña actualizada con éxito.")
     return redirect(url_for("admin_panel"))
 
-# =========================
+@app.route('/eliminar_tarea/<tarea_id>')
+def eliminar_tarea(tarea_id):
+    if session.get('rol') != 'admin':
+        return redirect(url_for('login'))
+    
+    from bson.objectid import ObjectId
+    # Eliminamos la tarea de la colección 'tareas'
+    db.tareas.delete_one({'_id': ObjectId(tarea_id)})
+    
+    # Opcional: También podrías eliminar los mensajes asociados a esa tarea
+    db.mensajes.delete_many({'tarea_id': tarea_id})
+    
+    flash("Tarea eliminada correctamente.")
+    return redirect(url_for('admin_panel'))
+
+
 # LOGOUT
-# =========================
+
 @app.route("/logout")
 def logout():
     session.clear()

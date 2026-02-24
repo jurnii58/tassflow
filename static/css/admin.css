@@ -267,3 +267,15 @@ body {
     max-width: 1160px;
     margin: 20px auto 0;
 }
+.btn-del-task {
+    width: 40px !important;
+    padding: 8px !important;
+    background: rgba(255, 69, 58, 0.2) !important;
+    color: #ff453a !important;
+    border: 1px solid rgba(255, 69, 58, 0.4) !important;
+}
+
+.btn-del-task:hover {
+    background: #ff453a !important;
+    color: white !important;
+}

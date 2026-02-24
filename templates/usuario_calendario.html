@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Calendario - Tassflow</title>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
@@ -77,9 +76,9 @@ body {
 
 /* Ajustes de texto para modo oscuro */
 .fc { color: var(--text-main); }
-.fc .fc-toolbar-title { font-size: 1.2em; font-weight: 600; }
+.fc .fc-toolbar-title { font-size: 1.2em; font-weight: 600; text-transform: capitalize; }
 .fc .fc-col-header-cell-cushion, 
-.fc .fc-daygrid-day-number { color: var(--text-main); text-decoration: none; }
+.fc .fc-daygrid-day-number { color: var(--text-main); text-decoration: none; text-transform: capitalize; }
 .fc .fc-daygrid-day-number:hover { text-decoration: underline; }
 .fc-theme-standard td, .fc-theme-standard th { border-color: var(--glass-border); }
 </style>
@@ -90,7 +89,8 @@ body {
 <div class="header">
     <a href="/usuario"><i class="fas fa-chevron-left"></i> Volver</a>
     <h2>📅 Calendario de tareas</h2>
-    <div style="width: 70px;"></div> </div>
+    <div style="width: 70px;"></div> 
+</div>
 
 <div class="cal-container">
     <div id="calendario"></div>
@@ -98,17 +98,24 @@ body {
 
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/locales/es.global.min.js"></script>
+
 <script>
 document.addEventListener("DOMContentLoaded", function(){
     const calendarEl = document.getElementById("calendario");
     const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: "dayGridMonth",
-        locale: "es",
+        locale: "es", /* Ahora sí funcionará porque cargamos el diccionario arriba */
         height: "auto", /* Quita el scroll innecesario */
         headerToolbar: {
             left: 'prev,next today',
             center: 'title',
             right: 'dayGridMonth,timeGridWeek' /* Agrega vista de semana para mayor control */
+        },
+        buttonText: {
+            today: 'Hoy',
+            month: 'Mes',
+            week: 'Semana'
         },
         events: {{ eventos | tojson | safe }}
     });
