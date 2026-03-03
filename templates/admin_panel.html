@@ -31,128 +31,67 @@
             padding-bottom: 50px;
         }
 
-        .header {
-            background: rgba(15, 15, 15, 0.7);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            padding: 20px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom-left-radius: 20px;
-            border-bottom-right-radius: 20px;
-            border-bottom: 1px solid var(--glass-border);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
+        .header { background: rgba(15, 15, 15, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; border-bottom: 1px solid var(--glass-border); position: sticky; top: 0; z-index: 1000; }
         .header h2 { margin: 0; font-size: 20px; font-weight: 600; }
         .header-actions { display: flex; gap: 15px; align-items: center; }
         .user-badge { background: rgba(255,255,255,0.1); padding: 6px 14px; border-radius: 20px; font-size: 13px; border: 1px solid var(--glass-border); }
         .ios-btn.ghost { color: var(--ios-red); text-decoration: none; font-weight: 500; font-size: 14px; transition: opacity 0.2s;}
-        .ios-btn.ghost:hover { opacity: 0.8; }
-
-        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; max-width: 1200px; margin: 30px auto; padding: 0 20px; }
-        .stat { background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); padding: 25px; border-radius: 20px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.3); }
-        .stat h4 { margin: 0 0 10px 0; color: var(--text-muted); font-size: 13px; text-transform: uppercase; }
-        .stat p { margin: 0; font-size: 32px; font-weight: bold; }
-
-        .admin-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
         
-        .card { background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); padding: 25px; border-radius: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); display: flex; flex-direction: column; }
-        .card h3 { margin-top: 0; margin-bottom: 20px; font-size: 18px; border-bottom: 1px solid var(--glass-border); padding-bottom: 12px;}
-        .card h4 { font-size: 14px; color: var(--text-muted); margin-bottom: 15px; margin-top: 20px;}
+        .admin-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; max-width: 1400px; margin: 30px auto; padding: 0 20px; }
+        @media (min-width: 1000px) { .admin-layout { grid-template-columns: 1fr 1fr 1fr; } .card-full-width { grid-column: span 2; } .card-side-width { grid-column: span 1; } }
 
-        input[type="text"], input[type="password"] { width: 100%; padding: 12px 15px; margin-bottom: 15px; border-radius: 12px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.3); color: var(--text-main); font-size: 14px; box-sizing: border-box; outline: none; }
+        .card { background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); padding: 25px; border-radius: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); display: flex; flex-direction: column; }
+        .card h3 { margin-top: 0; margin-bottom: 20px; font-size: 18px; border-bottom: 1px solid var(--glass-border); padding-bottom: 12px;}
+        
+        input[type="text"], input[type="password"], select { width: 100%; padding: 12px 15px; margin-bottom: 15px; border-radius: 12px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.3); color: var(--text-main); font-size: 14px; box-sizing: border-box; outline: none; }
         input::placeholder { color: rgba(255,255,255,0.4); }
-        input:focus { border-color: rgba(255,255,255,0.5); }
+        select option { background: #1a1a1a; color: white; }
 
         .usuarios-checkbox { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
-        .usuarios-checkbox label { background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 10px; font-size: 13px; border: 1px solid var(--glass-border); cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.2s; }
-        .usuarios-checkbox label:hover { background: rgba(255,255,255,0.1); }
-
-        .ios-btn { width: 100%; padding: 12px; border-radius: 12px; border: none; font-size: 14px; font-weight: 600; cursor: pointer; color: white; transition: opacity 0.2s, transform 0.1s; text-align: center; display: inline-block; box-sizing: border-box; text-decoration: none; margin-top: auto;}
+        .usuarios-checkbox label { background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 10px; font-size: 13px; border: 1px solid var(--glass-border); cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        
+        .ios-btn { width: 100%; padding: 12px; border-radius: 12px; border: none; font-size: 14px; font-weight: 600; cursor: pointer; color: white; text-align: center; display: inline-block; box-sizing: border-box; text-decoration: none; margin-top: auto; transition: opacity 0.2s;}
+        .ios-btn:hover { opacity: 0.8; }
         .ios-btn.primary { background: var(--ios-blue); }
         .ios-btn.secondary { background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); color: var(--text-main); }
         .ios-btn.danger { background: rgba(255, 69, 58, 0.15); color: var(--ios-red); border: 1px solid rgba(255, 69, 58, 0.3); padding: 8px 15px; width: auto; font-size: 12px; margin-top: 0;}
         .ios-btn.warning { background: rgba(255, 159, 10, 0.2); color: var(--ios-orange); border: 1px solid rgba(255, 159, 10, 0.4); padding: 8px 15px; width: auto; font-size: 12px; margin-top: 0;}
         .ios-btn.ghost-blue { background: transparent; color: var(--ios-blue); border: 1px solid var(--ios-blue); padding: 8px 15px; width: auto; font-size: 12px; margin-top: 0;}
-        .ios-btn:hover { opacity: 0.8; }
-        .ios-btn:active { transform: scale(0.97); }
+        
+        /* Botones de acción pequeños (Basura y Lápiz) */
+        .btn-action-task { width: 36px !important; padding: 8px 0 !important; cursor: pointer; }
+        .btn-action-task.del { background: rgba(255, 69, 58, 0.15) !important; color: var(--ios-red) !important; border: 1px solid rgba(255, 69, 58, 0.3) !important; }
+        .btn-action-task.del:hover { background: var(--ios-red) !important; color: white !important; }
+        .btn-action-task.edit { background: rgba(255, 159, 10, 0.15) !important; color: var(--ios-orange) !important; border: 1px solid rgba(255, 159, 10, 0.3) !important; }
+        .btn-action-task.edit:hover { background: var(--ios-orange) !important; color: white !important; }
 
-        .btn-del-task {
-            width: 36px !important;
-            padding: 8px 0 !important;
-            background: rgba(255, 69, 58, 0.15) !important;
-            color: var(--ios-red) !important;
-            border: 1px solid rgba(255, 69, 58, 0.3) !important;
-            cursor: pointer;
-        }
-        .btn-del-task:hover { background: var(--ios-red) !important; color: white !important; }
-
-        .lista-usuarios, .lista-tareas { list-style: none; padding: 0; margin: 0; }
+        .lista-usuarios, .lista-tareas, .lista-actividades { list-style: none; padding: 0; margin: 0; }
         .lista-usuarios li, .tarea-chat-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--glass-border); }
-        .lista-usuarios li:last-child, .tarea-chat-item:last-child { border-bottom: none; }
         .tarea-chat-item div { flex: 1; }
-        .tarea-chat-item strong { display: block; font-size: 15px; margin-bottom: 4px; }
-        .tarea-chat-item small { color: var(--text-muted); font-size: 12px; display: block; }
-
-        .grafica-card { position: relative; height: 320px; width: 100%; display: flex; flex-direction: column;}
-        .grafica-card canvas { width: 100% !important; flex: 1; max-height: 250px;}
-
-        /* ================= VENTANA MODAL (PANTALLITA) ================= */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
+        .tarea-chat-item strong { display: block; font-size: 15px; margin-bottom: 6px; }
+        .tarea-chat-item small { color: var(--text-muted); font-size: 12px; display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
         
-        .modal-overlay.active {
-            display: flex;
-            opacity: 1;
-        }
+        /* ================= ETIQUETAS DE PRIORIDAD (SEMÁFORO) ================= */
+        .badge-prioridad { padding: 3px 8px; border-radius: 12px; font-weight: bold; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .badge-prioridad.alta { background: rgba(255, 69, 58, 0.2); color: var(--ios-red); border: 1px solid rgba(255, 69, 58, 0.4); }
+        .badge-prioridad.media { background: rgba(255, 159, 10, 0.2); color: var(--ios-orange); border: 1px solid rgba(255, 159, 10, 0.4); }
+        .badge-prioridad.baja { background: rgba(48, 209, 88, 0.2); color: var(--ios-green); border: 1px solid rgba(48, 209, 88, 0.4); }
 
-        .modal-box {
-            background: rgba(30, 30, 30, 0.85);
-            border: 1px solid var(--glass-border);
-            padding: 30px;
-            border-radius: 24px;
-            max-width: 350px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-            transform: translateY(20px);
-            transition: transform 0.3s ease;
-        }
-
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 9999; opacity: 0; transition: opacity 0.3s ease; }
+        .modal-overlay.active { display: flex; opacity: 1; }
+        .modal-box { background: rgba(30, 30, 30, 0.85); border: 1px solid var(--glass-border); padding: 30px; border-radius: 24px; max-width: 350px; width: 90%; text-align: center; }
         .modal-overlay.active .modal-box { transform: translateY(0); }
-        .modal-box i { font-size: 40px; margin-bottom: 15px; }
+        .modal-box i.icon-main { font-size: 40px; margin-bottom: 15px; }
         .modal-box h3 { margin: 0 0 10px 0; font-size: 20px; }
-        .modal-box p { color: var(--text-muted); font-size: 14px; line-height: 1.5; margin-bottom: 25px; }
-        .modal-actions { display: flex; gap: 10px; }
-        .modal-actions button, .modal-actions a { margin-top: 0; }
+        .modal-box p { color: var(--text-muted); font-size: 14px; margin-bottom: 25px; }
+        .modal-actions { display: flex; gap: 10px; margin-top: 15px;}
         
-        /* Animación Alerta */
-        @keyframes pulsoAlerta {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.2); opacity: 0.7; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        .icono-alerta-usuario {
-            color: var(--ios-orange);
-            margin-left: 8px;
-            font-size: 14px;
-            animation: pulsoAlerta 1.5s infinite;
-        }
+        @keyframes pulsoAlerta { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.2); opacity: 0.7; } 100% { transform: scale(1); opacity: 1; } }
+        .icono-alerta-usuario { color: var(--ios-orange); margin-left: 8px; font-size: 14px; animation: pulsoAlerta 1.5s infinite; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.4); }
     </style>
 </head>
 <body>
@@ -160,263 +99,250 @@
 <header class="header">
     <h2><i class="fas fa-hammer" style="margin-right: 8px; color: var(--ios-blue);"></i>Panel del Administrador</h2>
     <div class="header-actions">
+        <a href="{{ url_for('admin_estadisticas') }}" class="ios-btn primary" style="width: auto; padding: 8px 15px; margin: 0;">
+            <i class="fas fa-chart-pie" style="margin-right: 5px;"></i> Estadísticas
+        </a>
         <span class="user-badge">{{ session["usuario"] }}</span>
-        <a href="{{ url_for('logout') }}" class="ios-btn ghost">Cerrar sesión</a>
+        <a href="{{ url_for('logout') }}" class="ios-btn ghost" style="margin: 0; padding: 8px;">Cerrar sesión</a>
     </div>
 </header>
 
 {% with messages = get_flashed_messages() %}
   {% if messages %}
-    <div style="background: rgba(255, 69, 58, 0.2); border: 1px solid rgba(255, 69, 58, 0.4); color: #ff6961; padding: 15px; border-radius: 12px; text-align: center; font-weight: 600; max-width: 1160px; margin: 20px auto 0;">
-      {% for message in messages %}
-        <p style="margin: 0;">{{ message }}</p>
-      {% endfor %}
+    <div style="background: rgba(255, 69, 58, 0.2); border: 1px solid rgba(255, 69, 58, 0.4); color: #ff6961; padding: 15px; border-radius: 12px; text-align: center; font-weight: 600; max-width: 1360px; margin: 20px auto 0;">
+      {% for message in messages %} <p style="margin: 0;">{{ message }}</p> {% endfor %}
     </div>
   {% endif %}
 {% endwith %}
 
-<section class="stats">
-    <div class="stat">
-        <h4>Usuarios</h4>
-        <p>{{ total_usuarios }}</p>
-    </div>
-    <div class="stat">
-        <h4>Tareas Totales</h4>
-        <p>{{ total_tareas }}</p>
-    </div>
-    <div class="stat">
-        <h4>Pendientes</h4>
-        <p style="color: var(--ios-orange);">{{ tareas_pendientes }}</p>
-    </div>
-    <div class="stat">
-        <h4>Completadas</h4>
-        <p style="color: var(--ios-green);">{{ tareas_completadas }}</p>
-    </div>
-</section>
-
-{% set has_alerts = false %}
-{% for u in usuarios if u.solicitud_reset %}
-    {% set has_alerts = true %}
-{% endfor %}
-
-{% if has_alerts %}
-<section style="max-width: 1200px; margin: 0 auto 25px; padding: 0 20px;">
-    <div class="card" style="border-left: 5px solid var(--ios-orange); margin-bottom: 15px; flex-direction: row; justify-content: space-between; align-items: center; padding: 15px 25px;">
-        <div>
-            <h3 style="color: var(--ios-orange); border-bottom: none; margin-bottom: 5px; margin-top: 0;"><i class="fas fa-bell"></i> Solicitudes de Contraseña</h3>
-            <span style="color: var(--text-muted); font-size: 14px;">Hay usuarios que olvidaron su clave. Revisa la lista abajo.</span>
-        </div>
-    </div>
-</section>
-{% endif %}
-
 <section class="admin-layout">
-
     <div class="card">
         <h3><i class="fas fa-plus-circle" style="margin-right: 8px;"></i>Asignar tarea</h3>
         <form method="POST" action="{{ url_for('asignar_tarea') }}" style="display: flex; flex-direction: column; height: 100%;">
             <input type="text" name="titulo" placeholder="Título" required autocomplete="off">
             <input type="text" name="descripcion" placeholder="Descripción" required autocomplete="off">
-
             <h4>Asignar usuarios (mín. 1 – máx. 2)</h4>
             <div class="usuarios-checkbox">
                 {% for u in usuarios %}
-                    <label>
-                        <input type="checkbox" name="usuarios" value="{{ u.nombre_usuario }}">
-                        {{ u.nombre_usuario }}
-                    </label>
+                    <label><input type="checkbox" name="usuarios" value="{{ u.nombre_usuario }}">{{ u.nombre_usuario }}</label>
                 {% endfor %}
             </div>
-
             <button type="submit" class="ios-btn primary">Asignar</button>
         </form>
     </div>
 
-    <div class="card">
+    <div class="card" style="grid-column: span 2;">
         <h3><i class="fas fa-users" style="margin-right: 8px;"></i>Gestión de usuarios</h3>
-        <ul class="lista-usuarios">
+        <ul class="lista-usuarios" style="max-height: 180px; overflow-y: auto; padding-right: 10px;">
             {% for u in usuarios %}
                 <li>
-                    <span>
-                        {{ u.nombre_usuario }}
-                        {% if u.get('solicitud_reset') %}
-                            <i class="fas fa-key icono-alerta-usuario" title="¡Este usuario olvidó su contraseña!"></i>
-                        {% endif %}
-                    </span>
-                    
+                    <span>{{ u.nombre_usuario }} {% if u.get('solicitud_reset') %}<i class="fas fa-key icono-alerta-usuario" title="Ayuda"></i>{% endif %}</span>
                     <div style="display: flex; gap: 8px;">
                         {% if u.get('solicitud_reset') %}
-                            <button type="button" class="ios-btn warning" 
-                                    onclick="abrirModalReset('{{ url_for('resetear_password', id=u._id) }}', '{{ u.nombre_usuario }}')">
-                                Restablecer
-                            </button>
+                            <button type="button" class="ios-btn warning" onclick="abrirModalReset('{{ url_for('resetear_password', id=u._id) }}', '{{ u.nombre_usuario }}')">Restablecer</button>
                         {% endif %}
-
-                        <button type="button" class="ios-btn danger" 
-                                onclick="abrirModalUsuario('{{ url_for('eliminar_usuario', id=u._id) }}', '{{ u.nombre_usuario }}')">
-                            <i class="fas fa-trash"></i>
-                        </button>
+                        <button type="button" class="ios-btn danger btn-action-task del" onclick="abrirModalUsuario('{{ url_for('eliminar_usuario', id=u._id) }}', '{{ u.nombre_usuario }}')"><i class="fas fa-trash"></i></button>
                     </div>
                 </li>
             {% endfor %}
         </ul>
-        <hr style="border-color: var(--glass-border); width: 100%; margin: 20px 0;">
-        <h4>Nuevo usuario</h4>
-        <form method="POST" action="{{ url_for('crear_usuario') }}" style="display: flex; flex-direction: column; height: 100%;">
-            <input type="text" name="usuario" placeholder="Usuario" required autocomplete="off">
-            <input type="password" name="contrasena" placeholder="Contraseña" required>
-            <button type="submit" class="ios-btn secondary">Crear</button>
+        <hr style="border-color: var(--glass-border); width: 100%; margin: 15px 0;">
+        <form method="POST" action="{{ url_for('crear_usuario') }}" style="display: flex; gap: 15px;">
+            <input type="text" name="usuario" placeholder="Nuevo Usuario" required autocomplete="off" style="margin: 0; flex: 1;">
+            <input type="password" name="contrasena" placeholder="Contraseña" required style="margin: 0; flex: 1;">
+            <button type="submit" class="ios-btn secondary" style="width: auto; padding: 12px 25px;">Crear</button>
         </form>
     </div>
 
-    <div class="card grafica-card">
-        <h3><i class="fas fa-chart-bar" style="margin-right: 8px;"></i>Estado de tareas</h3>
-        <canvas id="graficaTareas"></canvas>
-    </div>
+    <div class="card chat-card card-full-width">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 15px; border-bottom: 1px solid var(--glass-border); padding-bottom: 15px; margin-bottom: 15px;">
+            <h3 style="margin: 0; border: none; padding: 0;"><i class="fas fa-tasks" style="margin-right: 8px;"></i>Registro General de Tareas (<span id="contador-tareas">{{ tareas|length }}</span>)</h3>
+            <div style="display: flex; gap: 10px; flex: 1; max-width: 400px; min-width: 250px;">
+                <div style="position: relative; flex: 1;">
+                    <i class="fas fa-search" style="position: absolute; top: 14px; left: 15px; color: var(--text-muted);"></i>
+                    <input type="text" id="buscador-tareas" placeholder="Buscar título o usuario..." style="margin: 0; padding-left: 40px;">
+                </div>
+                <select id="filtro-estado" style="margin: 0; width: auto; cursor: pointer;">
+                    <option value="Todas">Todas</option>
+                    <option value="Pendiente">Pendientes</option>
+                    <option value="Completada">Completadas</option>
+                </select>
+            </div>
+        </div>
 
-    <div class="card chat-card">
-        <h3><i class="fas fa-comments" style="margin-right: 8px;"></i>Chats de tareas</h3>
         {% if tareas %}
-            <ul class="lista-tareas">
+            <ul class="lista-tareas" id="contenedor-lista-tareas" style="max-height: 450px; overflow-y: auto; padding-right: 10px;">
                 {% for t in tareas %}
-                    <li class="tarea-chat-item">
+                    {% set prio = t.prioridad if t.prioridad else 'Media' %} <li class="tarea-chat-item">
                         <div>
-                            <strong>{{ t.titulo }}</strong>
-                            <small>Usuarios: {{ t.usuarios | join(", ") }}</small>
-                            <small>Estado: {{ t.estado }}</small>
+                            <strong class="tarea-titulo">{{ t.titulo }}</strong>
+                            <small>
+                                <span class="tarea-usuarios"><i class="fas fa-user" style="margin-right: 3px;"></i> {{ t.usuarios | join(", ") }}</span> 
+                                <span>|</span>
+                                <span>Estado: <span class="tarea-estado" style="color: {{ 'var(--ios-green)' if t.estado == 'Completada' else 'var(--ios-orange)' }}">{{ t.estado }}</span></span>
+                                <span>|</span>
+                                <span>Prioridad: <span class="badge-prioridad {{ prio | lower }}">{{ prio }}</span></span>
+                            </small>
                         </div>
-                        <div style="display: flex; gap: 8px;">
+                        <div style="display: flex; gap: 8px; justify-content: flex-end;">
                             <a href="{{ url_for('ver_chat', tarea_id=t._id) }}" class="ios-btn ghost-blue">Ver chat</a>
                             
-                            <button type="button" class="ios-btn btn-del-task" 
-                                    onclick="abrirModalTarea('{{ url_for('eliminar_tarea', tarea_id=t._id) }}')">
+                            <button type="button" class="ios-btn btn-action-task edit" 
+                                    data-id="{{ t._id }}" 
+                                    data-titulo="{{ t.titulo }}" 
+                                    data-descripcion="{{ t.descripcion }}" 
+                                    data-usuarios='{{ t.usuarios | tojson }}'
+                                    onclick="abrirModalEditar(this)" title="Editar tarea">
+                               <i class="fas fa-pen"></i>
+                            </button>
+                            
+                            <button type="button" class="ios-btn btn-action-task del" onclick="abrirModalTarea('{{ url_for('eliminar_tarea', tarea_id=t._id) }}')" title="Eliminar tarea">
                                <i class="fas fa-trash"></i>
                             </button>
                         </div>
                     </li>
                 {% endfor %}
             </ul>
+            <p id="mensaje-no-resultados" style="display: none; text-align: center; color: var(--text-muted); margin-top: 20px;">No se encontraron tareas.</p>
         {% else %}
             <p style="color: var(--text-muted); text-align: center; margin-top: 20px;">No hay tareas creadas.</p>
         {% endif %}
     </div>
 
+    <div class="card card-side-width">
+        <h3 style="margin-bottom: 10px;"><i class="fas fa-history" style="margin-right: 8px;"></i>Registro de Actividad</h3>
+        <p style="font-size: 12px; color: var(--text-muted); margin-top: 0; border-bottom: 1px solid var(--glass-border); padding-bottom: 15px; margin-bottom: 10px;">Acciones recientes del administrador</p>
+        
+        <ul class="lista-actividades" style="max-height: 400px; overflow-y: auto; padding-right: 10px;">
+            {% if actividades %}
+                {% for act in actividades %}
+                    <li style="display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                        {% if act.tipo == 'creacion' %}
+                            <i class="fas fa-plus-circle" style="color: var(--ios-green); font-size: 16px; margin-top: 2px;"></i>
+                        {% elif act.tipo == 'eliminacion' %}
+                            <i class="fas fa-trash-alt" style="color: var(--ios-red); font-size: 16px; margin-top: 2px;"></i>
+                        {% elif act.tipo == 'alerta' %}
+                            <i class="fas fa-shield-alt" style="color: var(--ios-orange); font-size: 16px; margin-top: 2px;"></i>
+                        {% else %}
+                            <i class="fas fa-info-circle" style="color: var(--ios-blue); font-size: 16px; margin-top: 2px;"></i>
+                        {% endif %}
+                        <div style="flex: 1;">
+                            <span style="font-size: 13px; display: block; margin-bottom: 4px; color: var(--text-main); line-height: 1.4;">{{ act.mensaje }}</span>
+                            <small style="color: var(--text-muted); font-size: 11px;">
+                                <i class="far fa-clock" style="margin-right: 3px;"></i> 
+                                {{ act.fecha.strftime('%d/%m/%Y %H:%M') if act.fecha else 'Reciente' }}
+                            </small>
+                        </div>
+                    </li>
+                {% endfor %}
+            {% else %}
+                 <p style="color: var(--text-muted); text-align: center; font-size: 13px; margin-top: 20px;">Sin actividad reciente.</p>
+            {% endif %}
+        </ul>
+    </div>
 </section>
 
-<div id="modalEliminarTarea" class="modal-overlay">
-    <div class="modal-box">
-        <i class="fas fa-exclamation-triangle" style="color: var(--ios-red);"></i>
-        <h3>Eliminar Tarea</h3>
-        <p>¿Estás seguro de que deseas eliminar esta tarea y todo su historial de mensajes? Esta acción no se puede deshacer.</p>
-        <div class="modal-actions">
-            <button type="button" class="ios-btn secondary" onclick="cerrarModal('modalEliminarTarea')">Cancelar</button>
-            <a id="btnConfirmarEliminarTarea" href="#" class="ios-btn danger" style="margin-top: 0;">Sí, eliminar</a>
-        </div>
-    </div>
-</div>
+<div id="modalEliminarTarea" class="modal-overlay"><div class="modal-box"><i class="fas fa-exclamation-triangle icon-main" style="color: var(--ios-red);"></i><h3>Eliminar Tarea</h3><p>¿Seguro de eliminar esta tarea?</p><div class="modal-actions"><button type="button" class="ios-btn secondary" onclick="cerrarModal('modalEliminarTarea')">Cancelar</button><a id="btnConfirmarEliminarTarea" href="#" class="ios-btn danger">Sí, eliminar</a></div></div></div>
+<div id="modalEliminarUsuario" class="modal-overlay"><div class="modal-box"><i class="fas fa-user-times icon-main" style="color: var(--ios-red);"></i><h3>Eliminar Usuario</h3><p>¿Revocar el acceso a <strong id="nombreUsuarioModal"></strong>?</p><div class="modal-actions"><button type="button" class="ios-btn secondary" onclick="cerrarModal('modalEliminarUsuario')">Cancelar</button><a id="btnConfirmarEliminarUsuario" href="#" class="ios-btn danger">Sí, eliminar</a></div></div></div>
+<div id="modalResetPassword" class="modal-overlay"><div class="modal-box"><i class="fas fa-key icon-main" style="color: var(--ios-orange);"></i><h3>Restablecer Clave</h3><p>Ingresa contraseña para <strong id="nombreUsuarioResetModal" style="color: var(--text-main);"></strong>.</p><form id="formResetPassword" method="POST" action="" style="display: flex; flex-direction: column; gap: 15px;"><input type="text" name="nueva_clave" placeholder="Nueva contraseña" required style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.3); color: white; outline: none; margin: 0;"><div class="modal-actions"><button type="button" class="ios-btn secondary" onclick="cerrarModal('modalResetPassword')">Cancelar</button><button type="submit" class="ios-btn warning">Actualizar</button></div></form></div></div>
 
-<div id="modalEliminarUsuario" class="modal-overlay">
+<div id="modalEditarTarea" class="modal-overlay">
     <div class="modal-box">
-        <i class="fas fa-user-times" style="color: var(--ios-red);"></i>
-        <h3>Eliminar Usuario</h3>
-        <p>¿Deseas revocar el acceso a <strong id="nombreUsuarioModal"></strong>? Sus tareas quedarán sin asignar.</p>
-        <div class="modal-actions">
-            <button type="button" class="ios-btn secondary" onclick="cerrarModal('modalEliminarUsuario')">Cancelar</button>
-            <a id="btnConfirmarEliminarUsuario" href="#" class="ios-btn danger" style="margin-top: 0;">Sí, eliminar</a>
-        </div>
-    </div>
-</div>
-
-<div id="modalResetPassword" class="modal-overlay">
-    <div class="modal-box">
-        <i class="fas fa-key" style="color: var(--ios-orange);"></i>
-        <h3>Restablecer Clave</h3>
-        <p>Ingresa una nueva contraseña segura para el usuario <strong id="nombreUsuarioResetModal" style="color: var(--text-main);"></strong>.</p>
-        
-        <form id="formResetPassword" method="POST" action="" style="display: flex; flex-direction: column; gap: 15px;">
-            <input type="text" name="nueva_clave" placeholder="Nueva contraseña" required 
-                   style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.3); color: white; outline: none; margin: 0; box-sizing: border-box;">
+        <i class="fas fa-pen icon-main" style="color: var(--ios-orange);"></i>
+        <h3>Editar Tarea</h3>
+        <form id="formEditarTarea" method="POST" action="" style="display: flex; flex-direction: column; gap: 10px; text-align: left;">
+            <label style="font-size: 12px; color: var(--text-muted);">Título de la tarea</label>
+            <input type="text" name="titulo" id="edit-titulo" required style="margin-bottom: 5px;">
             
+            <label style="font-size: 12px; color: var(--text-muted);">Descripción</label>
+            <input type="text" name="descripcion" id="edit-descripcion" required style="margin-bottom: 5px;">
+            
+            <label style="font-size: 12px; color: var(--text-muted);">Reasignar Usuarios</label>
+            <div class="usuarios-checkbox" id="edit-usuarios-container" style="margin-bottom: 5px;">
+                </div>
+
             <div class="modal-actions">
-                <button type="button" class="ios-btn secondary" onclick="cerrarModal('modalResetPassword')">Cancelar</button>
-                <button type="submit" class="ios-btn" style="background: var(--ios-orange); margin-top: 0;">Actualizar</button>
+                <button type="button" class="ios-btn secondary" onclick="cerrarModal('modalEditarTarea')">Cancelar</button>
+                <button type="submit" class="ios-btn warning">Guardar Cambios</button>
             </div>
         </form>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <script>
-/* ================= LÓGICA DE LAS PANTALLITAS MODALES ================= */
-function abrirModalTarea(urlEliminar) {
-    const modal = document.getElementById('modalEliminarTarea');
-    document.getElementById('btnConfirmarEliminarTarea').href = urlEliminar;
-    modal.classList.add('active');
-}
+/* ================= VARIABLES GLOBALES PARA EDITAR ================= */
+// Pasamos los nombres de usuario desde Python a JS para poder armar los checkboxes al editar
+const todosLosUsuarios = [
+    {% for u in usuarios %} "{{ u.nombre_usuario }}", {% endfor %}
+];
 
-function abrirModalUsuario(urlEliminar, nombreUsuario) {
-    const modal = document.getElementById('modalEliminarUsuario');
-    document.getElementById('btnConfirmarEliminarUsuario').href = urlEliminar;
-    document.getElementById('nombreUsuarioModal').innerText = nombreUsuario;
-    modal.classList.add('active');
-}
+/* ================= BUSCADOR ================= */
+document.addEventListener("DOMContentLoaded", function() {
+    const inputBuscador = document.getElementById("buscador-tareas");
+    const selectFiltro = document.getElementById("filtro-estado");
+    const tareasElementos = document.querySelectorAll(".tarea-chat-item");
+    const mensajeVacio = document.getElementById("mensaje-no-resultados");
+    const contadorTareas = document.getElementById("contador-tareas");
 
-// LÓGICA DE LA NUEVA PANTALLITA DE CONTRASEÑAS
-function abrirModalReset(urlReset, nombreUsuario) {
-    const modal = document.getElementById('modalResetPassword');
-    document.getElementById('formResetPassword').action = urlReset;
-    document.getElementById('nombreUsuarioResetModal').innerText = nombreUsuario;
-    modal.classList.add('active');
-}
+    function filtrarTareas() {
+        const textoBusqueda = inputBuscador.value.toLowerCase();
+        const estadoFiltro = selectFiltro.value;
+        let tareasVisibles = 0;
 
-function cerrarModal(modalId) {
-    document.getElementById(modalId).classList.remove('active');
-}
+        tareasElementos.forEach(tarea => {
+            const titulo = tarea.querySelector(".tarea-titulo").innerText.toLowerCase();
+            const usuarios = tarea.querySelector(".tarea-usuarios").innerText.toLowerCase();
+            const estadoActual = tarea.querySelector(".tarea-estado").innerText;
+            const coincideTexto = titulo.includes(textoBusqueda) || usuarios.includes(textoBusqueda);
+            const coincideEstado = estadoFiltro === "Todas" || estadoActual === estadoFiltro;
 
-window.onclick = function(event) {
-    if (event.target.classList.contains('modal-overlay')) {
-        event.target.classList.remove('active');
-    }
-}
-
-/* ================= GRÁFICA ================= */
-Chart.defaults.color = "rgba(255, 255, 255, 0.6)";
-Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif";
-
-const ctx = document.getElementById("graficaTareas");
-if (ctx) {
-    new Chart(ctx, {
-        type: "bar",
-        data: {
-            labels: ["Pendientes", "Completadas"],
-            datasets: [{
-                label: "Tareas",
-                data: [{{ tareas_pendientes }}, {{ tareas_completadas }}],
-                backgroundColor: ["#ff9f0a", "#30d158"],
-                borderRadius: 8,
-                maxBarThickness: 70
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: { color: "rgba(255, 255, 255, 0.1)" },
-                    border: { display: false }
-                },
-                x: {
-                    grid: { display: false },
-                    border: { display: false }
-                }
+            if (coincideTexto && coincideEstado) {
+                tarea.style.display = "flex";
+                tareasVisibles++;
+            } else {
+                tarea.style.display = "none";
             }
-        }
-    });
-}
-</script>
+        });
+        if (contadorTareas) contadorTareas.innerText = tareasVisibles;
+        mensajeVacio.style.display = (tareasVisibles === 0 && tareasElementos.length > 0) ? "block" : "none";
+    }
+    if(inputBuscador) inputBuscador.addEventListener("keyup", filtrarTareas);
+    if(selectFiltro) selectFiltro.addEventListener("change", filtrarTareas);
+});
 
+/* ================= MODALES ================= */
+function abrirModalTarea(url) { document.getElementById('modalEliminarTarea').classList.add('active'); document.getElementById('btnConfirmarEliminarTarea').href = url; }
+function abrirModalUsuario(url, nombre) { document.getElementById('modalEliminarUsuario').classList.add('active'); document.getElementById('btnConfirmarEliminarUsuario').href = url; document.getElementById('nombreUsuarioModal').innerText = nombre; }
+function abrirModalReset(url, nombre) { document.getElementById('modalResetPassword').classList.add('active'); document.getElementById('formResetPassword').action = url; document.getElementById('nombreUsuarioResetModal').innerText = nombre; }
+
+// LOGICA ESPECIAL PARA EL MODAL DE EDITAR
+function abrirModalEditar(btn) {
+    // 1. Extraemos los datos del botón que fue presionado
+    const id = btn.getAttribute('data-id');
+    const titulo = btn.getAttribute('data-titulo');
+    const descripcion = btn.getAttribute('data-descripcion');
+    const usuariosAsignados = JSON.parse(btn.getAttribute('data-usuarios'));
+
+    // 2. Llenamos el formulario
+    document.getElementById('formEditarTarea').action = '/editar_tarea/' + id;
+    document.getElementById('edit-titulo').value = titulo;
+    document.getElementById('edit-descripcion').value = descripcion;
+
+    // 3. Reconstruimos los checkboxes marcando los que ya estaban asignados
+    const container = document.getElementById('edit-usuarios-container');
+    container.innerHTML = ''; // Limpiar anteriores
+    
+    todosLosUsuarios.forEach(u => {
+        const isChecked = usuariosAsignados.includes(u) ? 'checked' : '';
+        container.innerHTML += `<label><input type="checkbox" name="usuarios" value="${u}" ${isChecked}> ${u}</label>`;
+    });
+
+    // 4. Abrimos la ventanita
+    document.getElementById('modalEditarTarea').classList.add('active');
+}
+
+function cerrarModal(id) { document.getElementById(id).classList.remove('active'); }
+window.onclick = function(e) { if(e.target.classList.contains('modal-overlay')) e.target.classList.remove('active'); }
+</script>
 </body>
 </html>

@@ -1,21 +1,114 @@
-<h2>Mis documentos</h2>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mis Documentos - Tassflow</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* ===================================================
+           TASSFLOW - MIS DOCUMENTOS (MAC GLASS DARK MODE)
+           =================================================== */
+        :root {
+            --glass-bg: rgba(20, 20, 20, 0.55);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --ios-blue: #0a84ff;
+            --ios-green: #30d158;
+            --ios-red: #ff453a;
+            --ios-orange: #ff9f0a;
+            --text-main: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.6);
+        }
 
-<ul class="lista-tareas">
-{% for d in documentos %}
-<li class="tarea-chat-item">
-    <div>
-        <strong>{{ d.nombre }}</strong><br>
-        <small>{{ d.descripcion }}</small><br>
-        <span>Estado: {{ d.estado }}</span>
-    </div>
+        body {
+            margin: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+            background: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop') no-repeat center center fixed;
+            background-size: cover; background-color: #121212; color: var(--text-main); padding-bottom: 50px;
+        }
 
-    {% if d.estado == "Pendiente" %}
-    <form method="POST" enctype="multipart/form-data"
-          action="{{ url_for('subir_documento', id=d._id) }}">
-        <input type="file" name="archivo" required>
-        <button class="btn-chat">Subir</button>
-    </form>
+        .header { background: rgba(15, 15, 15, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; border-bottom: 1px solid var(--glass-border); position: sticky; top: 0; z-index: 1000; }
+        .header h2 { margin: 0; font-size: 20px; font-weight: 600; }
+        .header a { color: var(--ios-blue); text-decoration: none; font-weight: 500; display: flex; align-items: center; gap: 5px; transition: 0.2s;}
+        .header a:hover { opacity: 0.8; }
+
+        .docs-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 25px; max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        
+        .doc-card { background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); padding: 25px; border-radius: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); display: flex; flex-direction: column; transition: transform 0.2s; }
+        .doc-card:hover { transform: translateY(-5px); }
+        
+        .doc-card h3 { margin-top: 0; margin-bottom: 10px; font-size: 18px; display: flex; align-items: center; gap: 10px;}
+        .doc-card p { color: var(--text-muted); font-size: 14px; margin-bottom: 20px; line-height: 1.5; }
+        
+        .badge { padding: 4px 10px; border-radius: 8px; font-weight: bold; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; width: fit-content; margin-bottom: 15px;}
+        .badge.pendiente { background: rgba(255, 159, 10, 0.2); color: var(--ios-orange); border: 1px solid rgba(255, 159, 10, 0.4); }
+        .badge.subido { background: rgba(48, 209, 88, 0.2); color: var(--ios-green); border: 1px solid rgba(48, 209, 88, 0.4); }
+
+        .ios-btn { width: 100%; padding: 12px; border-radius: 12px; border: none; font-size: 14px; font-weight: 600; cursor: pointer; color: white; text-align: center; display: inline-block; box-sizing: border-box; text-decoration: none; transition: 0.2s; margin-top: auto;}
+        .ios-btn:hover { opacity: 0.8; }
+        .ios-btn.primary { background: var(--ios-blue); }
+        .ios-btn.success { background: var(--ios-green); color: #000; }
+        .ios-btn.ghost-orange { background: transparent; color: var(--ios-orange); border: 1px solid var(--ios-orange); }
+
+        /* Estilo para el input de archivo */
+        input[type="file"] { width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 12px; border: 1px dashed var(--glass-border); background: rgba(0,0,0,0.2); color: var(--text-main); font-size: 13px; box-sizing: border-box; cursor: pointer; }
+        input[type="file"]::file-selector-button { background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); color: white; padding: 6px 12px; border-radius: 8px; cursor: pointer; transition: 0.2s; margin-right: 10px; }
+        input[type="file"]::file-selector-button:hover { background: rgba(255,255,255,0.2); }
+
+        .empty-state { text-align: center; color: var(--text-muted); grid-column: 1 / -1; padding: 50px; background: var(--glass-bg); border-radius: 24px; border: 1px dashed var(--glass-border); }
+        .empty-state i { font-size: 50px; margin-bottom: 15px; color: rgba(255,255,255,0.2); }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <a href="/usuario"><i class="fas fa-chevron-left"></i> Volver al Espacio de Trabajo</a>
+    <h2><i class="fas fa-folder-open" style="margin-right: 8px; color: var(--ios-orange);"></i>Gestor de Documentos</h2>
+    <div style="width: 70px;"></div> 
+</header>
+
+<section class="docs-layout">
+    {% if documentos %}
+        {% for doc in documentos %}
+            <div class="doc-card">
+                <h3>
+                    {% if doc.estado == 'Pendiente' %}
+                        <i class="fas fa-file-alt" style="color: var(--ios-orange);"></i>
+                    {% else %}
+                        <i class="fas fa-file-check" style="color: var(--ios-green);"></i>
+                    {% endif %}
+                    {{ doc.nombre_documento }}
+                </h3>
+                
+                <span class="badge {{ 'subido' if doc.estado == 'Subido' else 'pendiente' }}">
+                    Estado: {{ doc.estado }}
+                </span>
+                
+                <p><strong>Descripción:</strong> {{ doc.descripcion }}</p>
+                <p style="font-size: 12px; color: var(--text-muted); margin-top: -10px;">
+                    <i class="far fa-clock"></i> Solicitado el: {{ doc.fecha.strftime('%d/%m/%Y') }}
+                </p>
+
+                {% if doc.estado == 'Pendiente' %}
+                    <form action="{{ url_for('subir_documento', id=doc._id) }}" method="POST" enctype="multipart/form-data" style="display: flex; flex-direction: column; margin-top: auto;">
+                        <input type="file" name="archivo" required>
+                        <button type="submit" class="ios-btn primary"><i class="fas fa-cloud-upload-alt" style="margin-right: 5px;"></i> Subir Archivo</button>
+                    </form>
+                {% else %}
+                    <a href="/static/uploads/{{ doc.archivo }}" target="_blank" class="ios-btn success">
+                        <i class="fas fa-download" style="margin-right: 5px;"></i> Ver Archivo Subido
+                    </a>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state">
+            <i class="fas fa-folder-minus"></i>
+            <h2>Sin documentos requeridos</h2>
+            <p>No tienes ninguna solicitud de documentos pendiente en este momento.</p>
+        </div>
     {% endif %}
-</li>
-{% endfor %}
-</ul>
+</section>
+
+</body>
+</html>

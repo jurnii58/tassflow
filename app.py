@@ -16,7 +16,6 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # MONGO
-
 MONGO_URI = "mongodb+srv://admin_clod:15dpr1843W@pruebas.wxrrszb.mongodb.net/?appName=pruebas"
 client = MongoClient(MONGO_URI)
 
@@ -25,9 +24,20 @@ usuarios_col = db["usuarios"]
 tareas_col = db["tareas"]
 mensajes_col = db["mensajes"]
 documentos_col = db["documentos"]
+actividades_col = db["actividades"] # <--- NUEVA COLECCIÓN: HISTORIAL DE ACTIVIDAD
+
+# ================= FUNCIÓN DE HISTORIAL =================
+def registrar_actividad(tipo, mensaje):
+    """Guarda un registro automático de las acciones en el panel."""
+    actividades_col.insert_one({
+        "tipo": tipo, # 'creacion', 'eliminacion', 'alerta', 'info'
+        "mensaje": mensaje,
+        "fecha": datetime.now()
+    })
+# ========================================================
+
 
 # LOGIN
-
 @app.route("/", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -51,31 +61,34 @@ def login():
     return render_template("login.html")
 
 # ADMIN
-
 @app.route("/admin")
 def admin_panel():
     if session.get("rol") != "admin":
         return redirect(url_for("login"))
 
+    # Obtenemos el historial de actividad (últimos 50 movimientos)
+    historial = list(actividades_col.find().sort("fecha", -1).limit(50))
+
     return render_template(
         "admin_panel.html",
         usuarios=list(usuarios_col.find({"rol": "usuario"})),
-        tareas=list(tareas_col.find()),
+        tareas=list(tareas_col.find().sort("fecha_creacion", -1)), # Ordenadas por más recientes
         total_usuarios=usuarios_col.count_documents({"rol": "usuario"}),
         total_tareas=tareas_col.count_documents({}),
         tareas_pendientes=tareas_col.count_documents({"estado": "Pendiente"}),
-        tareas_completadas=tareas_col.count_documents({"estado": "Completada"})
+        tareas_completadas=tareas_col.count_documents({"estado": "Completada"}),
+        actividades=historial # Pasamos el historial al frontend
     )
 
 
 # CREAR / ELIMINAR USUARIO
-
 @app.route("/crear_usuario", methods=["POST"])
 def crear_usuario():
     if session.get("rol") != "admin":
         return redirect(url_for("login"))
 
     password = request.form["contrasena"]
+    usuario_nombre = request.form["usuario"]
     
     # REGLA: Mínimo 8 caracteres, 1 Mayúscula, 1 Número y 1 Caracter Especial
     regex = r"^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
@@ -85,12 +98,14 @@ def crear_usuario():
         return redirect(url_for("admin_panel"))
 
     usuarios_col.insert_one({
-        "nombre_usuario": request.form["usuario"],
+        "nombre_usuario": usuario_nombre,
         "contrasena": password,
         "rol": "usuario",
         "activo": True,
         "solicitud_reset": False # Nueva bandera para recuperación
     })
+    
+    registrar_actividad("creacion", f"Nuevo usuario registrado: {usuario_nombre}") # LOG
     return redirect(url_for("admin_panel"))
 
 @app.route("/eliminar_usuario/<id>")
@@ -105,6 +120,8 @@ def eliminar_usuario(id):
             {"$pull": {"usuarios": usuario["nombre_usuario"]}}
         )
         usuarios_col.delete_one({"_id": ObjectId(id)})
+        
+        registrar_actividad("eliminacion", f"Acceso revocado al usuario: {usuario['nombre_usuario']}") # LOG
 
     return redirect(url_for("admin_panel"))
 
@@ -116,24 +133,26 @@ def asignar_tarea():
         return redirect(url_for("login"))
 
     usuarios = request.form.getlist("usuarios")
+    titulo = request.form["titulo"]
+    
     if not (1 <= len(usuarios) <= 2):
         flash("Selecciona 1 o 2 usuarios")
         return redirect(url_for("admin_panel"))
 
     tareas_col.insert_one({
-        "titulo": request.form["titulo"],
+        "titulo": titulo,
         "descripcion": request.form["descripcion"],
         "usuarios": usuarios,
         "estado": "Pendiente",
         "prioridad": "Media",
         "fecha_creacion": datetime.now()
     })
-
+    
+    registrar_actividad("creacion", f"Nueva tarea asignada: '{titulo}'") # LOG
     return redirect(url_for("admin_panel"))
 
 
 # USUARIO
-
 @app.route("/usuario")
 def usuario_panel():
     if session.get("rol") != "usuario":
@@ -159,11 +178,10 @@ def usuario_panel():
         completadas=completadas,
         progreso=progreso
     )
-# CALENDARIO USUARIO
 
+# CALENDARIO USUARIO
 @app.route("/usuario/calendario")
 def usuario_calendario():
-
     if session.get("rol") != "usuario":
         return redirect(url_for("login"))
 
@@ -174,14 +192,10 @@ def usuario_calendario():
     eventos = []
 
     for t in tareas:
-
         fecha = t.get("fecha_creacion")
-
         if fecha:
-
             # convertir datetime Mongo a string YYYY-MM-DD
             fecha_str = fecha.strftime("%Y-%m-%d")
-
             eventos.append({
                 "title": t.get("titulo", "Sin título"),
                 "start": fecha_str,
@@ -189,18 +203,14 @@ def usuario_calendario():
                 "color": "#22c55e" if t.get("estado") == "Completada" else "#3b82f6"
             })
 
-    print(eventos)  # DEBUG
-
     return render_template(
         "usuario_calendario.html",
         eventos=eventos
     )
 
 # ESTADISTICAS USUARIO
-
 @app.route("/usuario/estadisticas")
 def usuario_estadisticas():
-
     if session.get("rol") != "usuario":
         return redirect(url_for("login"))
 
@@ -218,7 +228,6 @@ def usuario_estadisticas():
     )
 
 # CAMBIOS DE TAREA
-
 @app.route("/cambiar_prioridad/<id>", methods=["POST"])
 def cambiar_prioridad(id):
     tareas_col.update_one(
@@ -237,7 +246,6 @@ def completar_tarea(id):
 
 
 # CHAT
-
 @app.route("/chat/<tarea_id>")
 def ver_chat(tarea_id):
     tarea = tareas_col.find_one({"_id": ObjectId(tarea_id)})
@@ -245,7 +253,6 @@ def ver_chat(tarea_id):
         mensajes_col.find({"tarea_id": ObjectId(tarea_id)})
         .sort("fecha", 1)
     )
-
     return render_template("chat.html", tarea=tarea, mensajes=mensajes)
 
 @app.route("/enviar_mensaje/<tarea_id>", methods=["POST"])
@@ -275,7 +282,6 @@ def enviar_mensaje(tarea_id):
 
 
 # DOCUMENTOS
-
 @app.route("/solicitar_documento/<tarea_id>", methods=["POST"])
 def solicitar_documento(tarea_id):
     documentos_col.insert_one({
@@ -309,24 +315,17 @@ def subir_documento(id):
             "fecha_subida": datetime.now()
         }}
     )
-
     return redirect(url_for("mis_documentos"))
 
 
 @app.route("/obtener_mensajes/<tarea_id>")
 def obtener_mensajes(tarea_id):
-    # Usar la colección ya inicializada y convertir ObjectId/fechas
     try:
-        mensajes = list(
-            mensajes_col.find({"tarea_id": ObjectId(tarea_id)}).sort("fecha", 1)
-        )
+        mensajes = list(mensajes_col.find({"tarea_id": ObjectId(tarea_id)}).sort("fecha", 1))
     except Exception:
-        mensajes = list(
-            mensajes_col.find({"tarea_id": tarea_id}).sort("fecha", 1)
-        )
+        mensajes = list(mensajes_col.find({"tarea_id": tarea_id}).sort("fecha", 1))
 
     lista = []
-
     for m in mensajes:
         archivo = None
         if m.get("archivo"):
@@ -372,16 +371,19 @@ def resetear_password(id):
     if session.get("rol") != "admin": return redirect(url_for("login"))
     
     nueva_clave = request.form["nueva_clave"]
-    
     regex = r"^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
     if not re.match(regex, nueva_clave):
         flash("Error: La nueva contraseña debe tener 8 caracteres, una mayúscula, un número y un símbolo.")
         return redirect(url_for("admin_panel"))
 
-    usuarios_col.update_one(
-        {"_id": ObjectId(id)},
-        {"$set": {"contrasena": nueva_clave, "solicitud_reset": False}}
-    )
+    usuario = usuarios_col.find_one({"_id": ObjectId(id)})
+    if usuario:
+        usuarios_col.update_one(
+            {"_id": ObjectId(id)},
+            {"$set": {"contrasena": nueva_clave, "solicitud_reset": False}}
+        )
+        registrar_actividad("alerta", f"Contraseña restablecida por administrador para: {usuario['nombre_usuario']}") # LOG
+
     flash("Contraseña actualizada con éxito.")
     return redirect(url_for("admin_panel"))
 
@@ -390,19 +392,83 @@ def eliminar_tarea(tarea_id):
     if session.get('rol') != 'admin':
         return redirect(url_for('login'))
     
-    from bson.objectid import ObjectId
-    # Eliminamos la tarea de la colección 'tareas'
-    db.tareas.delete_one({'_id': ObjectId(tarea_id)})
+    # Buscamos la tarea para guardar el nombre en el historial
+    tarea = tareas_col.find_one({'_id': ObjectId(tarea_id)})
     
-    # Opcional: También podrías eliminar los mensajes asociados a esa tarea
-    db.mensajes.delete_many({'tarea_id': tarea_id})
+    if tarea:
+        tareas_col.delete_one({'_id': ObjectId(tarea_id)})
+        
+        # OJO: Aquí te arreglé un pequeño detalle. Le agregué 'ObjectId' a la búsqueda
+        # de mensajes_col para que coincida perfectamente en la base de datos y borre la basura.
+        mensajes_col.delete_many({'tarea_id': ObjectId(tarea_id)}) 
+        
+        registrar_actividad("eliminacion", f"Tarea eliminada permanentemente: '{tarea.get('titulo', 'Sin título')}'") # LOG
     
     flash("Tarea eliminada correctamente.")
     return redirect(url_for('admin_panel'))
 
 
-# LOGOUT
+# ESTADISTICAS ADMIN
+@app.route("/admin/estadisticas")
+def admin_estadisticas():
+    if session.get("rol") != "admin":
+        return redirect(url_for("login"))
 
+    return render_template(
+        "admin_estadisticas.html",
+        total_usuarios=usuarios_col.count_documents({"rol": "usuario"}),
+        total_tareas=tareas_col.count_documents({}),
+        tareas_pendientes=tareas_col.count_documents({"estado": "Pendiente"}),
+        tareas_completadas=tareas_col.count_documents({"estado": "Completada"})
+    )
+# EDITAR TAREA
+@app.route("/editar_tarea/<tarea_id>", methods=["POST"])
+def editar_tarea(tarea_id):
+    if session.get("rol") != "admin":
+        return redirect(url_for("login"))
+
+    titulo = request.form["titulo"]
+    descripcion = request.form["descripcion"]
+    usuarios = request.form.getlist("usuarios")
+    
+    if not (1 <= len(usuarios) <= 2):
+        flash("Selecciona 1 o 2 usuarios para la tarea editada.")
+        return redirect(url_for("admin_panel"))
+
+    # Actualizamos los datos en MongoDB
+    tareas_col.update_one(
+        {"_id": ObjectId(tarea_id)},
+        {"$set": {
+            "titulo": titulo,
+            "descripcion": descripcion,
+            "usuarios": usuarios
+        }}
+    )
+    
+    registrar_actividad("info", f"Tarea editada: '{titulo}'") # Guardamos en el historial
+    flash("Tarea actualizada correctamente.")
+    return redirect(url_for("admin_panel"))
+# === NUEVA RUTA PARA EL KANBAN (DRAG & DROP) ===
+@app.route("/api/actualizar_estado/<tarea_id>", methods=["POST"])
+def actualizar_estado_api(tarea_id):
+    if session.get("rol") != "usuario":
+        return jsonify({"error": "No autorizado"}), 403
+    
+    # Recibimos el nuevo estado desde el JavaScript del navegador
+    data = request.get_json()
+    nuevo_estado = data.get("estado")
+    
+    # Verificamos que sea un estado válido para el Kanban
+    if nuevo_estado in ["Pendiente", "En Proceso", "Completada"]:
+        tareas_col.update_one(
+            {"_id": ObjectId(tarea_id)},
+            {"$set": {"estado": nuevo_estado}}
+        )
+        return jsonify({"success": True})
+        
+    return jsonify({"error": "Estado inválido"}), 400
+
+# LOGOUT
 @app.route("/logout")
 def logout():
     session.clear()
@@ -410,6 +476,5 @@ def logout():
 
 # RUN
 if __name__ == "__main__":
-    import os
     port=int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=False)
