@@ -1,66 +1,58 @@
+import os
 import random
 from datetime import datetime, timedelta
 from pymongo import MongoClient
+from dotenv import load_dotenv
 
-print("Conectando a MongoDB Atlas...")
+load_dotenv()
+MONGO_URI = os.getenv("MONGO_URI")
 
-# Tu cadena de conexión exacta
-MONGO_URI = "mongodb+srv://admin_clod:15dpr1843W@pruebas.wxrrszb.mongodb.net/?appName=pruebas"
 client = MongoClient(MONGO_URI)
 db = client["carga_mental_db"]
-
-usuarios_col = db["usuarios"]
 tareas_col = db["tareas"]
+usuarios_col = db["usuarios"]
 
-# 1. Obtener los usuarios reales que ya tienes creados
 usuarios_db = list(usuarios_col.find({"rol": "usuario"}))
 nombres_usuarios = [u["nombre_usuario"] for u in usuarios_db]
 
 if not nombres_usuarios:
-    print("❌ Error: No tienes usuarios creados. Crea al menos un usuario normal en el panel admin primero.")
-    exit()
+    nombres_usuarios = ['juan', 'israel', 'luis', 'Sara']
 
 print(f"Usuarios encontrados: {nombres_usuarios}")
-print("Generando 100 tareas aleatorias...")
+print("\n=== INICIANDO INGESTA MASIVA: 1 MILLÓN DE REGISTROS ===")
 
-# Datos falsos para combinar
-titulos = [
-    "Revisar métricas de carga", "Optimización de base de datos", "Auditoría de seguridad",
-    "Redactar reporte mensual", "Reunión de planificación", "Actualizar servidores",
-    "Evaluación de estrés laboral", "Mantenimiento preventivo", "Soporte a cliente",
-    "Documentación técnica", "Revisión de inventario", "Configuración de red"
-]
-estados = ["Pendiente", "Completada"]
-prioridades = ["Baja", "Media", "Alta"]
+titulos = ["Revisar métricas", "Optimización BD", "Auditoría", "Reporte mensual", "Actualizar servidores"]
+estados = ["Pendiente", "En Proceso", "Completada"]
+prioridades = ["Alta", "Media", "Baja"]
 
-nuevas_tareas = []
+TOTAL_REGISTROS = 1000000
+TAMANO_LOTE = 10000
+lotes_totales = TOTAL_REGISTROS // TAMANO_LOTE
 
-for i in range(1, 101):
-    # Seleccionar 1 o 2 usuarios al azar
-    num_usuarios = random.randint(1, min(2, len(nombres_usuarios)))
-    asignados = random.sample(nombres_usuarios, num_usuarios)
+print(f"Se insertarán en {lotes_totales} lotes de {TAMANO_LOTE} registros cada uno para no asfixiar la RAM.\n")
+
+for lote in range(lotes_totales):
+    lote_tareas = []
     
-    # Generar una fecha aleatoria dentro de los últimos 30 días (para llenar el calendario)
-    dias_restar = random.randint(0, 30)
-    horas_restar = random.randint(0, 23)
-    fecha_random = datetime.now() - timedelta(days=dias_restar, hours=horas_restar)
+    for i in range(TAMANO_LOTE):
+        tarea = {
+            "titulo": f"{random.choice(titulos)} #{i + (lote * TAMANO_LOTE)}",
+            "descripcion": "Tarea generada por script de estrés masivo.",
+            "usuarios": [random.choice(nombres_usuarios)],
+            "estado": random.choice(estados),
+            "prioridad": random.choice(prioridades),
+            "fecha_creacion": datetime.now() - timedelta(days=random.randint(0, 365))
+        }
+        lote_tareas.append(tarea)
     
-    # Hacemos que haya más completadas (60%) que pendientes (40%) para que la gráfica se vea positiva
-    estado_random = random.choices(estados, weights=[40, 60])[0]
-
-    tarea = {
-        "titulo": f"{random.choice(titulos)} - {i}",
-        "descripcion": "Tarea generada automáticamente para pruebas de volumen y visualización de carga mental.",
-        "usuarios": asignados,
-        "estado": estado_random,
-        "prioridad": random.choice(prioridades),
-        "fecha_creacion": fecha_random
-    }
+    tareas_col.insert_many(lote_tareas, ordered=False)
     
-    nuevas_tareas.append(tarea)
+    del lote_tareas 
+    
+    print(f" Lote {lote + 1}/{lotes_totales} subido ({(lote + 1) * TAMANO_LOTE} tareas en la nube).")
 
-# 2. Inyectar todo de golpe a MongoDB
-tareas_col.insert_many(nuevas_tareas)
+print("\nCreando índices para búsquedas rápidas...")
+tareas_col.create_index("estado")
+tareas_col.create_index("prioridad")
 
-print("✅ ¡Éxito! 100 tareas han sido inyectadas en la nube.")
-print("Ve a tu panel de administrador de Tassflow y recarga la página.")
+print("\n ¡ÉXITO! 1 Millón de tareas inyectadas en MongoDB Atlas.")
